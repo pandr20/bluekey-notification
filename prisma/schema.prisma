@@ -11,3 +11,34 @@ datasource db {
 }
 
 
+model User {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  username   String   @unique
+  password   String   
+  name       String? //Optional
+  role       String
+  notifications Notification[]
+
+}
+
+
+model Notification {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     User     @relation(fields: [userIds], references: [id])
+  userIds    String   @db.ObjectId // relation scalar field  (used in the `@relation` attribute above)
+  created_at DateTime @default(now())
+  isRead     Boolean  @default(false)
+  priority   Int      @default(0)
+  message    String?  
+  
+}
+
+// model Service {
+//   id      String   @id @default(auto()) @map("_id") @db.ObjectId
+
+// }
+
+// model State {
+//   id      String   @id @default(auto()) @map("_id") @db.ObjectId
+
+// }
