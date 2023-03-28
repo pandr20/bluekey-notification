@@ -1,69 +1,132 @@
-import { PrismaClient, Prisma } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-const userData: Prisma.UserCreateInput[] = [
-  {
-    name: 'Jesse',
-    email: 'jesse@mongodb.com',
-    posts: {
-      create: [
-        {
-          title: 'Join the MongoDB Community',
-          content: 'https://community.mongodb.com/',
-          published: true,
-        },
-      ],
-    },
-  },
-  {
-    name: 'Mira',
-    email: 'mira@mongodb.com',
-    posts: {
-      create: [
-        {
-          title: 'Follow MongoDB on Twitter',
-          content: 'https://www.twitter.com/mongodb',
-          published: true,
-        },
-      ],
-    },
-  },
-  {
-    name: 'Mike',
-    email: 'mike@mongodb.com',
-    posts: {
-      create: [
-        {
-          title: 'We have a podcast!',
-          content: 'https://podcasts.mongodb.com/',
-          published: true,
-        },
-        {
-          title: 'MongoDB on YouTube',
-          content: 'https://www.youtube.com/c/MongoDBofficial',
-        },
-      ],
-    },
-  },
-]
-
 async function main() {
-  console.log(`Start seeding ...`)
-  for (const u of userData) {
-    const user = await prisma.user.create({
-      data: u,
+    const user1 = await prisma.user.create({
+      data: {
+        username: 'user1',
+        password: 'password1',
+        name: 'User One',
+        role: 'Manager',
+      },
     })
-    console.log(`Created user with id: ${user.id}`)
-  }
-  console.log(`Seeding finished.`)
+
+    const user2 = await prisma.user.create({
+        data: {
+          username: 'user2',
+          password: 'password2',
+          name: 'User Two',
+          role: 'Operator',
+        },
+      })
+
+    const service1 = await prisma.service.create({
+    data: {
+        data: 'Service One Data',
+        user: {
+        connect: {
+            id: user1.id,
+        },
+        },
+    },
+    })
+
+    const service2 = await prisma.service.create({
+        data: {
+          data: 'Service Two Data',
+          user: {
+            connect: {
+              id: user2.id,
+            },
+          },
+        },
+      })
+
+      const notification1 = await prisma.notification.create({
+        data: {
+          user: {
+            connect: {
+              id: user1.id,
+            },
+          },
+          service: {
+            connect: {
+              id: service1.id,
+            },
+          },
+          state: 'UNREAD',
+          isRead: false,
+          priority: 1,
+          message: 'Notification One Message',
+        },
+      })
+
+      const notification2 = await prisma.notification.create({
+        data: {
+          user: {
+            connect: {
+              id: user1.id,
+            },
+          },
+          service: {
+            connect: {
+              id: service1.id,
+            },
+          },
+          state: 'READ',
+          isRead: true,
+          priority: 2,
+          message: 'Notification Two Message',
+        },
+      })
+    
+      const notification3 = await prisma.notification.create({
+        data: {
+          user: {
+            connect: {
+              id: user2.id,
+            },
+          },
+          service: {
+            connect: {
+              id: service2.id,
+            },
+          },
+          state: 'PROCESSING',
+          isRead: false,
+          priority: 3,
+          message: 'Notification Three Message',
+        },
+      })
+    
+      const notification4 = await prisma.notification.create({
+        data: {
+          user: {
+            connect: {
+              id: user2.id,
+            },
+          },
+          service: {
+            connect: {
+              id: service2.id,
+            },
+          },
+          state: 'COMPLETED',
+          isRead: true,
+          priority: 4,
+          message: 'Notification Four Message',
+        },
+      })
+
+      console.log({ user1, user2, service1, service2, notification1, notification2, notification3, notification4 })
 }
 
 main()
-  .catch((e) => {
-    console.error(e)
-    process.exit(1)
-  })
+  .catch((e) => console.error(e))
   .finally(async () => {
     await prisma.$disconnect()
   })
+
+
+    

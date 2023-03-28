@@ -28,8 +28,11 @@ model Notification {
   userId     String   @db.ObjectId // relation scalar field  (used in the `@relation` attribute above)
   service    Service  @relation(fields: [serviceId], references: [id])
   serviceId  String   @db.ObjectId
-  state      State    @relation(fields: [stateId], references: [id])
-  stateId    String   @db.ObjectId
+  //state      State    @relation(fields: [stateId], references: [id])
+  state      NotificationState @default(UNREAD)
+
+  
+  //stateId    String   @db.ObjectId
 
   created_at DateTime @default(now())
   isRead     Boolean  @default(false)
@@ -46,10 +49,18 @@ model Service {
   notifications Notification[] //Array of notification objects. Used to query for all notifications associated with a service
 }
 
-model State {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  state   String[] 
-
-  notifications Notification[] //Array of notification objects. Used to query for all notifications associated with a state
-
+enum NotificationState {
+  UNREAD
+  READ
+  PROCESSING
+  COMPLETED
+  // Add additional states here as needed
 }
+
+// model State {
+//   id      String   @id @default(auto()) @map("_id") @db.ObjectId
+//   state   String[] 
+
+//   notifications Notification[] //Array of notification objects. Used to query for all notifications associated with a state
+
+// }
