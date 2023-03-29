@@ -1,6 +1,12 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
-}
+import Head from 'next/head';
+import type { AppProps } from 'next/app';
+import '../styles/globals.css';
+
+function HomePage() {
+  return ( <div className="bg-primary-black">
+    <h1 className="bg-white">Hello world</h1>
+    </div>
+)}
+
+export default HomePage
