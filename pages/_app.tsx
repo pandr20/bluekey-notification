@@ -9,7 +9,7 @@ import VoyageData from '@/data/VoyageData.json';
 function HomePage() {
   return (
     <div className="bg-primary-black">
-      <div className="bg-black p-4">
+      <div className=" p-4">
         <Navbar />
         <About />
         {VoyageData.voyages.map((voyage) => (
