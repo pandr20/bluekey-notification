@@ -6,6 +6,7 @@ import { About } from '@/components/About';
 import Navbar from '@/components/Navbar';
 import VoyageData from '@/data/VoyageData.json';
 
+
 function HomePage() {
   return (
     <div className="bg-primary-black">
