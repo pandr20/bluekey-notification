@@ -1,6 +1,24 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
+import Head from 'next/head';
+import type { AppProps } from 'next/app';
+import '../styles/globals.css';
+import Voyage from '@/components/Voyage';
+import { About } from '@/components/About';
+import Navbar from '@/components/Navbar';
+import VoyageData from '@/data/VoyageData.json';
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+
+function HomePage() {
+  return (
+    <div className="bg-primary-black">
+      <div className=" p-4">
+        <Navbar />
+        <About />
+        {VoyageData.voyages.map((voyage) => (
+          <Voyage key={voyage.id} voyage={voyage} />
+        ))}
+      </div>
+    </div>
+  );
 }
+
+export default HomePage;
