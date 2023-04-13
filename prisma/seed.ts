@@ -21,17 +21,36 @@ async function main() {
         },
       })
 
+    //Error 1
+
+    const service4 = await prisma.service.create({
+      data: {
+          data: 'Service One Data',
+          user: {
+          connect: [
+            {id: user1.id},
+            {id: user2.id},
+          ]
+          },
+      },
+      })
+
+    //Error 2
+
     const service1 = await prisma.service.create({
     data: {
         data: 'Service One Data',
         user: {
         connect: {
             id: user1.id,
+            id: user2.id,
         },
         },
     },
     })
 
+    // Working
+    
     const service2 = await prisma.service.create({
         data: {
           data: 'Service Two Data',
