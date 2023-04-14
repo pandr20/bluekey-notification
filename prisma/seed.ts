@@ -11,7 +11,7 @@ async function main() {
         role: 'Manager',
       },
     })
-
+    
     const user2 = await prisma.user.create({
         data: {
           username: 'user2',
@@ -23,17 +23,7 @@ async function main() {
 
     //Error 1
 
-    const service4 = await prisma.service.create({
-      data: {
-          data: 'Service One Data',
-          user: {
-          connect: [
-            {id: user1.id},
-            {id: user2.id},
-          ]
-          },
-      },
-      })
+
 
     //Error 2
 
@@ -43,14 +33,14 @@ async function main() {
         user: {
         connect: {
             id: user1.id,
-            id: user2.id,
+            
         },
         },
     },
     })
 
     // Working
-    
+
     const service2 = await prisma.service.create({
         data: {
           data: 'Service Two Data',
