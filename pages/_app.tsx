@@ -5,20 +5,29 @@ import Voyage from '@/components/Voyage';
 import { About } from '@/components/About';
 import Navbar from '@/components/Navbar';
 import VoyageData from '@/data/VoyageData.json';
+import { SessionProvider, useSession } from "next-auth/react";
+
+function MyApp({ Component, pageProps }: AppProps) {
 
 
-function HomePage() {
+  
   return (
-    <div className="bg-primary-black">
-      <div className=" p-4">
-        <Navbar />
-        <About />
-        {VoyageData.voyages.map((voyage) => (
-          <Voyage key={voyage.id} voyage={voyage} />
-        ))}
+    <SessionProvider
+    // Provider options are not required but can be useful in situations where
+    // you have a short session maxAge time. Shown here with default values.
+    session={pageProps.session}
+  >
+      <div className="bg-primary-black">
+        <div className=" p-4">
+          <Navbar />
+          <About />
+          {VoyageData.voyages.map((voyage) => (
+            <Voyage key={voyage.id} voyage={voyage} />
+          ))}
+        </div>
       </div>
-    </div>
+      </SessionProvider>
   );
 }
 
-export default HomePage;
+export default MyApp
