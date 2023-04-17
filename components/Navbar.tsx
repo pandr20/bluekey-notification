@@ -1,9 +1,10 @@
 import { signIn, signOut, useSession } from "next-auth/react";
+import { SignIn, SignInButton, SignOutButton, useUser, WithUser } from "@clerk/nextjs";
 import React from "react";
 
 function Navbar() {
-  const { data: session } = useSession();
-
+  
+const user = useUser();
 
     return (
   
@@ -14,19 +15,28 @@ function Navbar() {
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Bluekey</span>
         </a>
         <div className="flex md:order-2">
-          {session?.user ? (
+          {user.isSignedIn ? (
             <>
-            <p className="text-sky-600">{session.user.name}</p>
-              <button onClick={() => signOut()} type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-              Logout
-            </button>
+             <WithUser>
+             {(user) => (
+         
+            <p className="text-white text-xs ">
+            {user.firstName 
+              ? `Hello, ${user.firstName}!` 
+              : "Hello there!"}
+              </p>
+         
+        )}
+             </WithUser>
+           
+              <SignOutButton><span className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Logout</span></SignOutButton>
+           
+             
             </>
           
           ) : (
             
-              <button onClick={() => signIn()} type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Login
-              </button>
+            <SignInButton><span className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login</span></SignInButton>
           
           
           )}
