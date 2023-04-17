@@ -4,8 +4,10 @@ import '../styles/globals.css';
 import Voyage from '@/components/Voyage';
 import { About } from '@/components/About';
 import Navbar from '@/components/Navbar';
+import LoginBtn from '@/components/login-btn';
 import VoyageData from '@/data/VoyageData.json';
 import { SessionProvider, useSession } from "next-auth/react";
+
 
 function MyApp({ Component, pageProps }: AppProps) {
 
@@ -24,6 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           {VoyageData.voyages.map((voyage) => (
             <Voyage key={voyage.id} voyage={voyage} />
           ))}
+          <LoginBtn />
         </div>
       </div>
       </SessionProvider>
