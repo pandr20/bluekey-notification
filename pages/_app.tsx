@@ -7,7 +7,8 @@ import Navbar from '@/components/Navbar';
 import LoginBtn from '@/components/login-btn';
 import VoyageData from '@/data/VoyageData.json';
 import { SessionProvider, useSession } from "next-auth/react";
-import { ClerkProvider, SignInButton } from '@clerk/nextjs';
+import { ClerkProvider } from '@clerk/nextjs';
+
 
 
 function MyApp({ Component, pageProps }: AppProps) {
