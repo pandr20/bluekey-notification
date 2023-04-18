@@ -1,5 +1,5 @@
 import { signIn, signOut, useSession } from "next-auth/react";
-import { SignIn, SignInButton, SignOutButton, useUser, WithUser } from "@clerk/nextjs";
+import { SignIn, SignInButton, SignOutButton, UserButton, useUser, WithUser } from "@clerk/nextjs";
 import React from "react";
 
 function Navbar() {
@@ -46,6 +46,10 @@ const user = useUser();
         <span className="badge badge-xs badge-primary indicator-item"></span>
       </div>
     </button>
+    <div className="ml-5">
+    <UserButton />
+    </div>
+  
   </div>
   <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
     <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
