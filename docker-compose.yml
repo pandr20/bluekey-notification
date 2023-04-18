@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  application:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: application
+    ports:
+      - 3000:3000  
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    ports:
+      - 1883:1883
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      
