@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <div className="bg-primary-black">
         <div className=" p-4">
           <Navbar />
-          <About />
+          <div className="p-4" />
           {VoyageData.voyages.map((voyage) => (
             <Voyage key={voyage.id} voyage={voyage} />
           ))}
