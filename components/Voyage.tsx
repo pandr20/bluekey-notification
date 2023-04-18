@@ -20,7 +20,7 @@ const Voyage: React.FC<Voyageprops> = ({ voyage }) => {
     <div className="border border-gray-300 rounded-lg shadow-lg p-6 m-6 relative">
     <h2 className=" text-white text-lg font-bold mb-4">Voyage {voyage.id}</h2>
     <button className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-4 rounded absolute top-0 right-0 mt-2 mr-2">
-      Subscribe
+      Assign
     </button>
     <div className="flex flex-col sm:flex-row">
       <div className="flex-1 mb-2 sm:mb-0">
