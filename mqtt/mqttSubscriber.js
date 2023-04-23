@@ -1,4 +1,4 @@
-import mqtt from 'mqtt';
+import mqtt from "mqtt";
 import { PrismaClient } from '@prisma/client';
 //import { getUserServices } from './prismaQueries';
 
@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const mqttBrokerUrl = 'mqtt://localhost:1883';
 
 
-async function subscribeUserToServices(clientId, userId) {
+export async function subscribeUserToServices(clientId, userId) {
   const client = mqtt.connect(mqttBrokerUrl, { clientId, clean: false });
 
   client.on('connect', async () => {
@@ -39,5 +39,3 @@ async function subscribeUserToServices(clientId, userId) {
       
     });
   }
-  
-  export { subscribeUserToServices };
