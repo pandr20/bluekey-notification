@@ -9,6 +9,7 @@ export async function getUserServices(userId) {
     },
   });
 }
+
 //Creates a new notification with the provided data.
 export async function createNotification(notificationData) {
   return await prisma.notification.create({

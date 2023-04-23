@@ -1,5 +1,5 @@
-import { subscribeUserToServices } from './mqttSubscriber';
-import { publishNotification } from './mqttPublisher';
+import { subscribeUserToServices } from './mqttSubscriber.js';
+import { publishNotification } from './mqttPublisher.js';
 
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
@@ -18,8 +18,8 @@ async function testMQTT() {
 
 //  a published notification
     const testNotification = {
-    serviceId: 'test_service_id',
-    message: 'Test notification message',
+        serviceId: 'test_service_id',
+        message: 'Test notification message',
     };
 
 // Call the publishNotification function

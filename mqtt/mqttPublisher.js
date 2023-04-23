@@ -1,5 +1,5 @@
 import mqtt from 'mqtt';
-import { createNotification } from './prismaQueries';
+import { createNotification } from '../prisma/lib/prismaQueries.js';
 
 const mqttBrokerUrl = 'mqtt://localhost:1883';
 
@@ -8,7 +8,18 @@ export async function publishNotification(clientId, notificationData) {
   
     client.on('connect', async () => {
       console.log('Connected to MQTT broker.');
-  
+      
+
+      // Example data for creating a notification
+      const notificationData = {
+        userId: '643ab2b093862dfd4111ec85', // replace with a valid user ID
+        serviceId: '643ab2b193862dfd4111ec87', // replace with a valid service ID
+        state: 'UNREAD',
+        isRead: false,
+        priority: 1,
+        message: 'Test notification message',
+      };
+
       // Save notification to the database
       const createdNotification = await createNotification(notificationData);
   
