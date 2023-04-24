@@ -36,6 +36,14 @@ export async function subscribeUserToServices(clientId, userId) {
   
       // Process the received message and update the database
       // ...
+
+      // Parse the received message
+      const notificationData = JSON.parse(message.toString());
+
+      // Associate the user with the existing notification
+      await addUserToNotification(userId, notificationData.id);
+
+      console.log(`User ${userId} associated with notification ${notificationData.id}`);
       
     });
   }
