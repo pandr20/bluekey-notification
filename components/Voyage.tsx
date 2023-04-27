@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/nextjs";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import VoyageData from "../data/VoyageData.json";
 
 type Voyageprops = {
@@ -17,18 +17,37 @@ type Voyageprops = {
   };
 };
 
+async function getServices() {
+  const res = await fetch("/api/getServices");
+  if (!res.ok) {
+    console.log(res);
+  }
+
+  const data = await res.json();
+  console.log(data);
+  //return res.json();
+}
+
 const Voyage: React.FC<Voyageprops> = ({ voyage }) => {
-  const { isLoaded, isSignedIn, user } = useUser()
+  const { isLoaded, isSignedIn, user } = useUser();
+  const [services, setServices] = useState([]);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const result = await getServices();
+  //     setServices();
+  //   }
+
+  //   fetchData();
+  // }, []);
 
   const renderAssignButton = () => {
     if (user?.firstName === "Manager") {
       return (
         <>
-        
-        <button className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-4 rounded absolute top-0 right-0 mt-2 mr-2">
-          Assign
-        </button>
-        
+          <button className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-4 rounded absolute top-0 right-0 mt-2 mr-2">
+            Assign
+          </button>
         </>
       );
     }
@@ -39,11 +58,9 @@ const Voyage: React.FC<Voyageprops> = ({ voyage }) => {
     if (user?.firstName === "Admin") {
       return (
         <>
-        
-       
-        <button className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-7 rounded absolute top-0 right-20 mt-2 mr-6">
-          Edit
-        </button>
+          <button className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-7 rounded absolute top-0 right-20 mt-2 mr-6">
+            Edit
+          </button>
         </>
       );
     }
