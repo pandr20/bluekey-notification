@@ -38,19 +38,6 @@ model Notification {
   message    String?  
 }
 
-model Voyage {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  counterpart       String
-  cp_date           String
-  laycan_range      String
-  eta_load          String
-  loading_port      String
-  eta_disch         String
-  discharge_port    String
-  freight           Float
-  status            String
-}
-
 model Service {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   user    User?     @relation(fields: [userId], references: [id])
