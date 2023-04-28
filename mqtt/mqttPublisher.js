@@ -8,28 +8,18 @@ const mqttBrokerUrl = 'mqtt://localhost:1883';
   //import { v4 as uuidv4 } from 'uuid';
   //const clientId = uuidv4(); // Generates a unique clientId
 
-export async function publishNotification(clientId, notificationData) {
+export async function publishNotification(clientId, serviceId, notificationData) {
     const client = mqtt.connect(mqttBrokerUrl, { clientId, clean: false });
   
     client.on('connect', async () => {
-      console.log('Connected to MQTT broker.');
+      console.log('Publisher Connected to MQTT broker.');
       
-
-      // Example data for creating a notification
-      const notificationData = {
-        userId: '643ab2b093862dfd4111ec85', // replace with a valid user ID
-        serviceId: '643ab2b193862dfd4111ec87', // replace with a valid service ID
-        state: 'UNREAD',
-        isRead: false,
-        priority: 1,
-        message: 'Test notification message',
-      };
 
       // Save notification to the database
       const createdNotification = await createNotification(notificationData);
   
       // Publish the notification to the related service topic
-      const topic = `services/${notificationData.serviceId}/notifications`;
+      const topic = `services/${serviceId}/notifications`;
       const payload = JSON.stringify(createdNotification);
       client.publish(topic, payload, {qos: 2}, (err) => {
         if (err) {

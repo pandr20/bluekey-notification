@@ -1,5 +1,7 @@
 import mqtt from "mqtt";
 import { PrismaClient } from '@prisma/client';
+import { addUserToNotification } from '../prisma/lib/prismaQueries.js';
+
 //import { getUserServices } from './prismaQueries';
 
 
@@ -7,7 +9,7 @@ const prisma = new PrismaClient();
 const mqttBrokerUrl = 'mqtt://localhost:1883';
 
 
-export async function subscribeUserToServices(clientId, userId) {
+export async function subscribeUserToServices(clientId, userId, callback) {
   const client = mqtt.connect(mqttBrokerUrl, { clientId, clean: false });
 
   client.on('connect', async () => {
@@ -19,6 +21,8 @@ export async function subscribeUserToServices(clientId, userId) {
         userId: userId,
       },
     });
+
+    console.log('User subscribed services:', services);
     
 
     // Get the services the user is subscribed to
@@ -27,8 +31,10 @@ export async function subscribeUserToServices(clientId, userId) {
 
   // Subscribe to MQTT topics for each service
     services.forEach((service) => {
-        client.subscribe(`service/${service.id}/notifications`, { qos: 2 });
+        client.subscribe(`services/${service.id}/notifications`, { qos: 2 });
       });
+
+      callback(client)
     });
   
     client.on('message', async (topic, message) => {
@@ -46,5 +52,6 @@ export async function subscribeUserToServices(clientId, userId) {
       console.log(`User ${userId} associated with notification ${notificationData.id}`);
       
     });
+    
   }
 

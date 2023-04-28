@@ -4,12 +4,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: application
+    container_name: fullstack-app
     ports:
       - 3000:3000  
   mqtt:
     image: eclipse-mosquitto
-    container_name: mqtt
+    container_name: mqtt-broker
     ports:
       - 1883:1883
     volumes:

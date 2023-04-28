@@ -21,8 +21,16 @@ export async function createNotification(notificationData) {
 // Associates a user with a received notification
 export async function addUserToNotification(userId, notificationId) {
   return await prisma.notification.update({
-    where: { id: notificationId },
-    data: { users: { connect: { id: userId } } },
+    where: { 
+      id: notificationId 
+    },
+    data: { 
+      user: { 
+        connect: { 
+          id: userId 
+        } 
+      } 
+    },
   });
-  
+
 }
