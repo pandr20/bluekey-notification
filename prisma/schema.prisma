@@ -10,17 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?
-  notifications Notification[]
-  services      Service[]
-}
+
 
 model Notification {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
 //User Relation
-  user       User     @relation(fields: [userId], references: [id])
   userId     String   @db.ObjectId // relation scalar field  (used in the `@relation` attribute above)
 //Service relation
   service    Service  @relation(fields: [serviceId], references: [id])
@@ -36,10 +30,10 @@ model Notification {
 
 model Service {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  user    User?     @relation(fields: [userId], references: [id])
   userId  String?   @db.ObjectId // relation scalar field  (used in the `@relation` attribute above)
 
   notifications Notification[] //Array of notification objects. Used to query for all notifications associated with a service
+  subscribers Subscription[]
 
   // Voyages details 
   counterpart    String?
@@ -51,6 +45,13 @@ model Service {
   discharge_port String?
   freight        Float?
   status         String?
+}
+
+model Subscription {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String  @db.ObjectId @unique
+  service   Service @relation(fields: [serviceId], references: [id])
+  serviceId String  @db.ObjectId @unique
 }
 
 enum NotificationState {
