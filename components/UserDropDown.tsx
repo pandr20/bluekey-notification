@@ -10,7 +10,10 @@ const UserDropdown: React.FC = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch('/api/getUsers');
+        const response = await fetch('/api/getUsers', {
+          mode: 'cors',
+          credentials: 'include'
+        });
         const data: User[] = await response.json();
         setUsers(data);
         console.log('Fetched users:', data); // Add the console.log statement here
