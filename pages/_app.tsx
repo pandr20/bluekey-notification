@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Navbar />
           <div className="p-4" />
           {VoyageData.voyages.map((voyage) => (
-            <Voyage key={voyage.id} voyage={voyage} />
+            <Voyage />
           ))}
           <Novu />
         </div>
