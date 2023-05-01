@@ -44,7 +44,7 @@ const Voyage: React.FC<Voyageprops> = ({ voyage }) => {
         
         <button 
         className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-4 rounded absolute top-0 right-0 mt-2 mr-2"
-        onClick={myFunction}
+        onClick={handleAssignButtonClick}
         >
           Assign
         </button>
