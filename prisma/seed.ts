@@ -3,26 +3,10 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-    const user1 = await prisma.user.create({
-      data: {
-        name: 'User One',
-      },
-    })
+
     
-    const user2 = await prisma.user.create({
-      data: {
-        name: 'User Two',
-      },
-    })
-
-
     const service1 = await prisma.service.create({
       data: {
-        user: {
-          connect: {
-            id: user1.id,
-          },
-        },
         counterpart: 'ABC Shipping Co.',
         cp_date: new Date('2022-01-05'),
         laycan_range: '2022-01-10 - 2022-01-15',
@@ -37,11 +21,6 @@ async function main() {
 
     const service2 = await prisma.service.create({
       data: {
-        user: {
-          connect: {
-            id: user2.id,
-          },
-        },
         counterpart: 'DEF Shipping Co.',
         cp_date: new Date('2022-02-10'),
         laycan_range: '2022-02-15 - 2022-02-25',
@@ -68,83 +47,10 @@ async function main() {
       }
     })
 
-    const notification1 = await prisma.notification.create({
-      data: {
-        user: {
-          connect: {
-            id: user1.id,
-          },
-        },
-        service: {
-          connect: {
-            id: service1.id,
-          },
-        },
-        state: 'UNREAD',
-        isRead: false,
-        priority: 1,
-        message: 'Notification One Message',
-      },
-    })
 
-    const notification2 = await prisma.notification.create({
-      data: {
-        user: {
-          connect: {
-            id: user1.id,
-          },
-        },
-        service: {
-          connect: {
-            id: service1.id,
-          },
-        },
-        state: 'READ',
-        isRead: true,
-        priority: 2,
-        message: 'Notification Two Message',
-      },
-    })
-    
-    const notification3 = await prisma.notification.create({
-      data: {
-        user: {
-          connect: {
-            id: user2.id,
-          },
-        },
-        service: {
-          connect: {
-            id: service2.id,
-          },
-        },
-        state: 'PROCESSING',
-        isRead: false,
-        priority: 3,
-        message: 'Notification Three Message',
-      },
-    })
   
-    const notification4 = await prisma.notification.create({
-      data: {
-        user: {
-          connect: {
-            id: user2.id,
-          },
-        },
-        service: {
-          connect: {
-            id: service2.id,
-          },
-        },
-        state: 'COMPLETED',
-        isRead: true,
-        priority: 4,
-        message: 'Notification Four Message',
-      },
-    })
 
-  console.log({ user1, user2, service1, service2, service3, notification1, notification2, notification3, notification4 })
+  console.log({ service1, service2, service3,  })
 }
 
 main()

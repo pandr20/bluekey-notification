@@ -32,10 +32,6 @@ const Voyage: React.FC<Voyageprops> = ({ voyage }) => {
     setShowDropdown(!showDropdown);
     console.log("Message")
   };
-
-  function myFunction() {
-    console.log("Button clicked!");
-  }
   
   const renderAssignButton = () => {
     if (user?.firstName === "Manager") {
