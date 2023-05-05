@@ -27,14 +27,6 @@ export default function Voyage() {
     fetchData();
   }, []);
 
-  // async function getServices() {
-  //   const res = await fetch("/api/getServices");
-  //   if (!res.ok) {
-  //     console.log(res);
-  //   }
-
-  //   return res.json();
-  // }
   const renderAssignButton = () => {
     if (user?.firstName === "Manager") {
       return (
@@ -60,19 +52,6 @@ export default function Voyage() {
     }
     return null;
   };
-
-  // const data: {
-  //   id: string;
-  //   counterpart: string;
-  //   cp_date: string;
-  //   laycan_range: string;
-  //   eta_load: string;
-  //   loading_port: string;
-  //   eta_disch: string;
-  //   discharge_port: string;
-  //   freight: number;
-  //   status: string;
-  // }[] = await getServices();
 
   if (loading) {
     return <div>Loading...</div>;
