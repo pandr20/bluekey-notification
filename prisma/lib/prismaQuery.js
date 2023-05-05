@@ -1,11 +1,14 @@
-import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+import { clerkClient } from '@clerk/clerk-sdk-node';
+//import { Clerk } from '@clerk/clerk-sdk-node';
 
-async function main() {
 
-    
-    const service1 = await prisma.service.create({
+//const clerkClient = new Clerk(process.env.CLERK_SECRET_KEY);
+console.log(process.env.CLERK_SECRET_KEY);
+
+async function createServicesAndSubscribeUsers() {
+    // Create the services separately
+    /* const service1 = await prisma.service.create({
       data: {
         counterpart: 'ABC Shipping Co.',
         cp_date: new Date('2022-01-05'),
@@ -17,8 +20,8 @@ async function main() {
         freight: 7500,
         status: 'ongoing',
       },
-    })
-
+    });
+  
     const service2 = await prisma.service.create({
       data: {
         counterpart: 'DEF Shipping Co.',
@@ -31,8 +34,8 @@ async function main() {
         freight: 10000,
         status: 'completed',
       },
-    })
-
+    });
+  
     const service3 = await prisma.service.create({
       data: {
         counterpart: 'GHI Shipping Co.',
@@ -44,20 +47,18 @@ async function main() {
         discharge_port: 'Port F',
         freight: 12500,
         status: 'ongoing',
-      }
-    })
-
-
+      },
+    });
   
+    console.log('Service 1 ID:', service1.id);
+    console.log('Service 2 ID:', service2.id);
+    console.log('Service 3 ID:', service3.id); */
 
-  console.log({ service1, service2, service3,  })
+
+    const userList = await clerkClient.getUserList();
+    userList.data.forEach((user) => {
+        console.log(`User ID: ${user.id}, First Name: ${user.firstName}`);
+      });
 }
 
-main()
-  .catch((e) => console.error(e))
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
-
-
-    
+createServicesAndSubscribeUsers();
