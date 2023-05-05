@@ -2,13 +2,14 @@
 
 import { useUser } from "@clerk/nextjs";
 import VoyageData from "../data/VoyageData.json";
-import UserDropdown from "./UserDropDown"
+import UserDropdown from "./UserDropDown";
 import React, { useEffect, useState } from "react";
 
 export default function Voyage() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -25,39 +26,29 @@ export default function Voyage() {
         setLoading(false);
       }
     }
-        fetchData();
+    fetchData();
   }, []);
 
-
-const Voyage: React.FC<Voyageprops> = ({ voyage }) => {
-  const { isLoaded, isSignedIn, user } = useUser()
-  const [showDropdown, setShowDropdown] = useState(false);
-  
   useEffect(() => {
     console.log("showDropdown value changed:", showDropdown);
   }, [showDropdown]);
 
   const handleAssignButtonClick = () => {
     setShowDropdown(!showDropdown);
-    console.log("Message")
+    console.log("Message");
   };
-  
-
-
-
 
   const renderAssignButton = () => {
     if (user?.firstName === "Manager") {
       return (
         <>
-        <button 
-        className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-4 rounded absolute top-0 right-0 mt-2 mr-2"
-        onClick={handleAssignButtonClick}
-        >
-          Assign
-        </button>
-        {showDropdown && <UserDropdown />}
-
+          <button
+            className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-4 rounded absolute top-0 right-0 mt-2 mr-2"
+            onClick={handleAssignButtonClick}
+          >
+            Assign
+          </button>
+          {showDropdown && <UserDropdown />}
         </>
       );
     }
@@ -76,8 +67,6 @@ const Voyage: React.FC<Voyageprops> = ({ voyage }) => {
     }
     return null;
   };
-
- 
 
   if (loading) {
     return <div>Loading...</div>;
