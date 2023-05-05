@@ -1,6 +1,6 @@
 import mqtt from "mqtt";
 import { PrismaClient } from '@prisma/client';
-import { addUserToNotification } from '../prisma/lib/prismaQueries.js';
+import { addUserToNotification } from '../prisma/queries/prismaQueries.js';
 
 //import { getUserServices } from './prismaQueries';
 
