@@ -4,20 +4,18 @@ import { useUser } from "@clerk/nextjs";
 import VoyageData from "../data/VoyageData.json";
 import UserDropdown from "./UserDropDown";
 import React, { useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
-
+import { v4 as uuidv4 } from "uuid";
 
 export default function Voyage() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
-  
+
   // Which service is being interacted with
   const [selectedServiceId, setSelectedServiceId] = useState("");
 
   const clientId = uuidv4(); // Generates a unique clientId (Used for MQTT session)
-  
 
   useEffect(() => {
     async function fetchData() {
@@ -53,16 +51,20 @@ export default function Voyage() {
   const renderAssignButton = (serviceId: string) => {
     if (user?.firstName === "Manager") {
       return (
-        <>
+        <div className="flex flex-col">
           <button
             className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-4 rounded absolute top-0 right-0 mt-2 mr-2"
             onClick={() => handleAssignButtonClick(serviceId)}
           >
             Assign
           </button>
-          {/* When showDropdown is true, UserDropDown is rendered and receives the two props*/}
-          {showDropdown && <UserDropdown clientId={clientId} serviceId={selectedServiceId} />}
-        </>
+          <div className="absolute end-0 p-3">
+            {/* When showDropdown is true, UserDropDown is rendered and receives the two props*/}
+            {showDropdown && (
+              <UserDropdown clientId={clientId} serviceId={selectedServiceId} />
+            )}
+          </div>
+        </div>
       );
     }
     return null;
@@ -70,7 +72,7 @@ export default function Voyage() {
 
   //Render for manager users
   const renderEditButton = () => {
-    if (user?.firstName === "Admin") {
+    if (user?.firstName === "Manager") {
       return (
         <>
           <button className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-7 rounded absolute top-0 right-20 mt-2 mr-6">
