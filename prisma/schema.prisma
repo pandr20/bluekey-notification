@@ -13,7 +13,7 @@ datasource db {
 model Notification {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
 //User Relation
-  userId     String   @db.ObjectId // relation scalar field  (used in the `@relation` attribute above)
+  userId     String   
 //Service relation
   service    Service  @relation(fields: [serviceId], references: [id])
   serviceId  String   @db.ObjectId
@@ -28,7 +28,7 @@ model Notification {
 
 model Service {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId  String?   @db.ObjectId // relation scalar field  (used in the `@relation` attribute above)
+  userId  String?  
 
   notifications Notification[] //Array of notification objects. Used to query for all notifications associated with a service
   subscribers Subscription[]
@@ -49,9 +49,11 @@ model Service {
 //Documentation
 model Subscription {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String  @db.ObjectId @unique
+  userId    String  @unique
   service   Service @relation(fields: [serviceId], references: [id])
-  serviceId String  @db.ObjectId @unique
+  serviceId String  @db.ObjectId 
+
+   @@unique([userId, serviceId])
 }
 
 enum NotificationState {
