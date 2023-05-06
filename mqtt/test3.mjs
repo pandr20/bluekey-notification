@@ -17,7 +17,7 @@ async function test() {
     const notificationData = {
       user: {
         connect: {
-          id: '643ab2b093862dfd4111ec85',
+          id: '643ab2b093862dfd4111ec86',
         },
       },
       service: {
@@ -28,7 +28,7 @@ async function test() {
       state: 'UNREAD',
       isRead: false,
       priority: 1,
-      message: 'Pleaseeeeeee work',
+      message: '29-04',
     }
 
     console.log('Publishing a notification...');

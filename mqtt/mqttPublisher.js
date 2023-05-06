@@ -1,5 +1,5 @@
 import mqtt from 'mqtt';
-import { createNotification } from '../prisma/lib/prismaQueries.js';
+import { createNotification } from '../prisma/queries/prismaQueries.js';
 
 const mqttBrokerUrl = 'mqtt://localhost:1883';
 
