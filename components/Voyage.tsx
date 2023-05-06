@@ -4,12 +4,18 @@ import { useUser } from "@clerk/nextjs";
 import VoyageData from "../data/VoyageData.json";
 import UserDropdown from "./UserDropDown";
 import React, { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Voyage() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  // Which service is being interacted with
+  const [selectedServiceId, setSelectedServiceId] = useState("");
+
+  const clientId = uuidv4(); // Generates a unique clientId (Used for MQTT session)
 
   useEffect(() => {
     async function fetchData() {
@@ -29,34 +35,44 @@ export default function Voyage() {
     fetchData();
   }, []);
 
+  //Debug log for when dropdown value changes
   useEffect(() => {
     console.log("showDropdown value changed:", showDropdown);
   }, [showDropdown]);
 
-  const handleAssignButtonClick = () => {
+  //Toggle dropdown and set the interacted selectedServiceId when Assign is clicked
+  const handleAssignButtonClick = (serviceId: string) => {
     setShowDropdown(!showDropdown);
-    console.log("Message");
+    setSelectedServiceId(serviceId);
+    console.log("Assign button clicked with serviceId:", serviceId);
   };
 
-  const renderAssignButton = () => {
+  //Render for Manager users
+  const renderAssignButton = (serviceId: string) => {
     if (user?.firstName === "Manager") {
       return (
-        <>
+        <div className="flex flex-col">
           <button
             className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-4 rounded absolute top-0 right-0 mt-2 mr-2"
-            onClick={handleAssignButtonClick}
+            onClick={() => handleAssignButtonClick(serviceId)}
           >
             Assign
           </button>
-          {showDropdown && <UserDropdown />}
-        </>
+          <div className="absolute end-0 p-3">
+            {/* When showDropdown is true, UserDropDown is rendered and receives the two props*/}
+            {showDropdown && (
+              <UserDropdown clientId={clientId} serviceId={selectedServiceId} />
+            )}
+          </div>
+        </div>
       );
     }
     return null;
   };
 
+  //Render for manager users
   const renderEditButton = () => {
-    if (user?.firstName === "Admin") {
+    if (user?.firstName === "Manager") {
       return (
         <>
           <button className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-7 rounded absolute top-0 right-20 mt-2 mr-6">
@@ -90,7 +106,7 @@ export default function Voyage() {
             <h2 className="text-white text-lg font-bold mb-4">
               Voyage {service.id}
             </h2>
-            {renderAssignButton()}
+            {renderAssignButton(service.id)}
             {renderEditButton()}
             <div className="flex flex-col sm:flex-row">
               <div className="flex-1 mb-2 sm:mb-0">
