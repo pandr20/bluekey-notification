@@ -41,7 +41,7 @@ export default function Voyage() {
   };
 
   const renderEditButton = () => {
-    if (user?.firstName === "Admin") {
+    if (user?.firstName === "Manager") {
       return (
         <>
           <button className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-7 rounded absolute top-0 right-20 mt-2 mr-6">
