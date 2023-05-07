@@ -1,3 +1,4 @@
+//Voyage.tsx
 "use client";
 
 import { useUser } from "@clerk/nextjs";
@@ -40,14 +41,33 @@ export default function Voyage() {
 
 
   // Function to generate a message based on edited fields
-function generateEditedMessage(service: any, editedService: any): string {
-  //Need logic for how we compare the messages, idk how
-
+function generateEditedMessage(originalService: any, editedService: any): string {
+  // Initialize the message string with a base message
+  let message = "Service has been edited. Changed fields: ";
   
-  return "Service has been edited"; // Should return the edited message
+  // Initialize an empty array to store the changes made in the service
+  let changes: string[] = [];
+
+  // Iterate through each key (property) of the original service object
+  Object.keys(originalService).forEach((key) => {
+    // Compare the value of the original service's property with the edited service's property
+    if (originalService[key] !== editedService[key]) {
+      // If the values are different, it means the field has been edited
+      // Push the information about the change into the 'changes' array
+      changes.push(`${key}: ${originalService[key]} -> ${editedService[key]}`);
+    }
+  });
+
+  // Combine the base message with the list of changes, separated by commas
+  return message + changes.join(", ");
 }
 
   useEffect(() => {
+
+    // Get the original service from the services state using the selectedServiceId
+    const originalService = services.find(service => service.id === selectedServiceId);
+
+
     if (!editedService) return; //Won't start if editedService is not set
 
     async function editService() {
@@ -59,11 +79,10 @@ function generateEditedMessage(service: any, editedService: any): string {
           },
           //Change to serviceId, clientId, originalService, editedService
           body: JSON.stringify({ 
-            serviceId,
+            serviceId: selectedServiceId,
             editedService,
-            originalService, 
             clientId, 
-            message: generateEditedMessage(service, editedService) }),
+            message: generateEditedMessage(originalService, editedService) }),
           //.. message: generateEditedMessage(originalService, editedService),
         });
 
@@ -73,10 +92,11 @@ function generateEditedMessage(service: any, editedService: any): string {
 
         
       } catch (error) {
-        
+        console.error(error);
       }
     }
-  })
+    editService();
+  }, [editedService]);
   
 
   //Debug log for when dropdown value changes
