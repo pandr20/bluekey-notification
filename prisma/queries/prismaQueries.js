@@ -22,6 +22,7 @@ export async function createNotification(notificationData) {
 }
 
 
+
 // Add service subscription for a user
 export async function addServiceSubscription(userId, serviceId) {
 
@@ -30,6 +31,15 @@ export async function addServiceSubscription(userId, serviceId) {
       userId: userId,
       serviceId: serviceId,
     },
+  });
+}
+
+
+
+export async function updatedService(serviceId, editedService) {
+  return await prisma.service.update({
+    where: { id: serviceId },
+    data: editedService,
   });
 }
 

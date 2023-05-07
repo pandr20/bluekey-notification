@@ -14,6 +14,8 @@ export default function Voyage() {
 
   // Which service is being interacted with
   const [selectedServiceId, setSelectedServiceId] = useState("");
+  
+  const [editedService, setEditedService] = useState(null);
 
   const clientId = uuidv4(); // Generates a unique clientId (Used for MQTT session)
 
@@ -34,6 +36,42 @@ export default function Voyage() {
     }
     fetchData();
   }, []);
+
+
+  // Function to generate a message based on edited fields
+function generateEditedMessage(service: any, editedService: any): string {
+  //Need logic for how we compare the messages, idk how
+
+  
+  return "Service has been edited"; // Should return the edited message
+}
+
+  useEffect(() => {
+    if (!editedService) return; //Won't start if editedService is not set
+
+    async function editService() {
+      try {
+        const res = await fetch("/api/editService", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          //Change to serviceId, clientId, originalService, editedService
+          body: JSON.stringify(editedService),
+          //.. message: generateEditedMessage(originalService, editedService),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to update Service")
+        }
+
+        
+      } catch (error) {
+        
+      }
+    }
+  })
+  
 
   //Debug log for when dropdown value changes
   useEffect(() => {
