@@ -58,7 +58,12 @@ function generateEditedMessage(service: any, editedService: any): string {
             "Content-Type": "application/json",
           },
           //Change to serviceId, clientId, originalService, editedService
-          body: JSON.stringify(editedService),
+          body: JSON.stringify({ 
+            serviceId,
+            editedService,
+            originalService, 
+            clientId, 
+            message: generateEditedMessage(service, editedService) }),
           //.. message: generateEditedMessage(originalService, editedService),
         });
 
