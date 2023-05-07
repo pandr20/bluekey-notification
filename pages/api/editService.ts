@@ -10,6 +10,7 @@ export default async function handler(
 ) {
   if (req.method === "PUT") {
     const { serviceId, editedService, message, clientId } = req.body;
+    console.log("Received data:", { serviceId, editedService, message, clientId });
 
     try {
       // Update the service in the database
