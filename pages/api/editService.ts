@@ -25,6 +25,7 @@ export default async function handler(
         isRead: false,
         priority: 1,
         message,
+        serviceId,
       };
 
       console.log(`Publishing notification for service ${serviceId} with data: `, notificationData);

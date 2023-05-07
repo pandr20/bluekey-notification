@@ -17,7 +17,10 @@ export async function getUserServices(userId) {
 //Creates a new notification with the provided data.
 export async function createNotification(notificationData) {
   return await prisma.notification.create({
-    data: notificationData,
+    data: {
+      ...notificationData,
+      userId: undefined,
+    }
   });
 }
 
@@ -62,15 +65,11 @@ export async function updatedService(serviceId, editedService) {
 // Associates a user with a received notification
 export async function addUserToNotification(userId, notificationId) {
   return await prisma.notification.update({
-    where: { 
-      id: notificationId 
+    where: {
+      id: notificationId,
     },
-    data: { 
-      user: { 
-        connect: { 
-          id: userId 
-        } 
-      } 
+    data: {
+      userId: userId,
     },
   });
 
