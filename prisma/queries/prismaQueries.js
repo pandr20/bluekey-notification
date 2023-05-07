@@ -35,14 +35,29 @@ export async function addServiceSubscription(userId, serviceId) {
 }
 
 
-
+/*
 export async function updatedService(serviceId, editedService) {
   return await prisma.service.update({
     where: { id: serviceId },
     data: editedService,
   });
 }
+*/
 
+export async function updatedService(serviceId, editedService) {
+  console.log("Entering updatedService function");
+  try {
+    const updated = await prisma.service.update({
+      where: { id: serviceId },
+      data: editedService,
+    });
+    console.log("Service updated:", updated);
+    return updated;
+  } catch (error) {
+    console.log("Error in updatedService:", error);
+    throw error;
+  }
+}
 
 // Associates a user with a received notification
 export async function addUserToNotification(userId, notificationId) {

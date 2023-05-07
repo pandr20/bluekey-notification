@@ -27,19 +27,18 @@ model Notification {
 }
 
 model Service {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId  String?  
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId 
 
   notifications Notification[] //Array of notification objects. Used to query for all notifications associated with a service
   subscribers Subscription[]
 
   // Voyages details 
   counterpart    String?
-  cp_date        DateTime?
+  cp_date        String?
   laycan_range   String?
-  eta_load       DateTime?
+  eta_load       String?
   loading_port   String?
-  eta_disch      DateTime?
+  eta_disch      String?
   discharge_port String?
   freight        Float?
   status         String?
@@ -49,7 +48,7 @@ model Service {
 //Documentation
 model Subscription {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String  @unique
+  userId    String  
   service   Service @relation(fields: [serviceId], references: [id])
   serviceId String  @db.ObjectId 
 

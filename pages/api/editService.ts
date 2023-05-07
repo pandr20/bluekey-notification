@@ -13,14 +13,21 @@ export default async function handler(
     console.log("Received data:", { serviceId, editedService, message, clientId });
 
     try {
+      console.log("starts the db query");
       // Update the service in the database
-      await updatedService(serviceId, editedService);
+      const { id, ...updatedFields } = editedService;
+      await updatedService(serviceId, updatedFields);
+      console.log(`Service ${serviceId} has been updated`);
 
       
       const notificationData = {
+        state: 'UNREAD',
+        isRead: false,
+        priority: 1,
         message,
-        // ... other notification data depending on what we decide
       };
+
+      console.log(`Publishing notification for service ${serviceId} with data: `, notificationData);
 
       // Call the publishNotification function with the clientId, serviceId, and notificationData
       await publishNotification(clientId, serviceId, notificationData);

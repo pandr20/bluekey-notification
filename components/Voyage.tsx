@@ -21,6 +21,8 @@ export default function Voyage() {
 
   const clientId = uuidv4(); // Generates a unique clientId (Used for MQTT session)
 
+  const messagetest = "test";
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -40,33 +42,7 @@ export default function Voyage() {
   }, []);
 
 
-  // Function to generate a message based on edited fields
-function generateEditedMessage(originalService: any, editedService: any): string {
-  // Initialize the message string with a base message
-  let message = "Service has been edited. Changed fields: ";
-  
-  // Initialize an empty array to store the changes made in the service
-  let changes: string[] = [];
-
-  // Iterate through each key (property) of the original service object
-  Object.keys(originalService).forEach((key) => {
-    // Compare the value of the original service's property with the edited service's property
-    if (originalService[key] !== editedService[key]) {
-      // If the values are different, it means the field has been edited
-      // Push the information about the change into the 'changes' array
-      changes.push(`${key}: ${originalService[key]} -> ${editedService[key]}`);
-    }
-  });
-
-  // Combine the base message with the list of changes, separated by commas
-  return message + changes.join(", ");
-}
-
   useEffect(() => {
-
-    // Get the original service from the services state using the selectedServiceId
-    const originalService = services.find(service => service.id === selectedServiceId);
-
 
     if (!editedService) return; //Won't start if editedService is not set
 
@@ -82,7 +58,8 @@ function generateEditedMessage(originalService: any, editedService: any): string
             serviceId: selectedServiceId,
             editedService,
             clientId, 
-            message: generateEditedMessage(originalService, editedService) }),
+            message: messagetest,
+           }),
           //.. message: generateEditedMessage(originalService, editedService),
         });
 
@@ -170,7 +147,7 @@ function generateEditedMessage(originalService: any, editedService: any): string
   return (
     <>
       {services.map(
-        (service: {
+        (service: {  
           id: string;
           counterpart: string;
           cp_date: string;
