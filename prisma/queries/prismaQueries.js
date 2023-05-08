@@ -72,6 +72,8 @@ export async function updatedService(serviceId, editedService) {
       userId: userId,
     },
   }); */
+
+  //Attempt to make a many-to-many
   export async function addUserToNotification(userId, notificationId) {
     try {
       const notification = await prisma.notification.findUnique({
