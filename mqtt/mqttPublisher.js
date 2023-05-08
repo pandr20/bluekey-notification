@@ -3,10 +3,15 @@ import { createNotification } from '../prisma/queries/prismaQueries.js';
 
 const mqttBrokerUrl = 'mqtt://mqtt:1883';
 
-//Should be added in the respective Next.js file 
-//Or in Publisher & Subscriber IF it doesn't matter if publ & sub has the same clientID- If so, remove clientId in the function
-  //import { v4 as uuidv4 } from 'uuid';
-  //const clientId = uuidv4(); // Generates a unique clientId
+/**
+ * Publishes a notification to the corresponding service topic.
+ *
+ * @param {string} clientId - The MQTT client ID.
+ * @param {number} serviceId - The ID of the service.
+ * @param {object} notificationData - The data for the notification.
+ * 
+ */
+//Retained = false means that they won't receive the last published noti to the topic
 
 export async function publishNotification(clientId, serviceId, notificationData) {
     const client = mqtt.connect(mqttBrokerUrl, { clientId, clean: false });
@@ -21,7 +26,7 @@ export async function publishNotification(clientId, serviceId, notificationData)
       // Publish the notification to the related service topic
       const topic = `services/${serviceId}/notifications`;
       const payload = JSON.stringify(createdNotification);
-      client.publish(topic, payload, {qos: 2, retain: true}, (err) => {
+      client.publish(topic, payload, {qos: 2, retain: false}, (err) => {
         if (err) {
           console.error(`Error publishing to topic: ${topic}`, err);
         } else {

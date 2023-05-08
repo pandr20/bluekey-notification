@@ -10,14 +10,14 @@ export default async function handler(
 ) {
   if (req.method === "PUT") {
     const { serviceId, editedService, message, clientId } = req.body;
-    console.log("Received data:", { serviceId, editedService, message, clientId });
+    //console.log("Received data:", { serviceId, editedService, message, clientId });
 
     try {
-      console.log("starts the db query");
+      //console.log("starts the db query");
       // Update the service in the database
       const { id, ...updatedFields } = editedService;
       await updatedService(serviceId, updatedFields);
-      console.log(`Service ${serviceId} has been updated`);
+      //console.log(`Service ${serviceId} has been updated`);
 
       
       const notificationData = {
@@ -28,7 +28,7 @@ export default async function handler(
         serviceId,
       };
 
-      console.log(`Publishing notification for service ${serviceId} with data: `, notificationData);
+      console.log(`Publishing notification for service ${serviceId} with data. `);
 
       // Call the publishNotification function with the clientId, serviceId, and notificationData
       await publishNotification(clientId, serviceId, notificationData);

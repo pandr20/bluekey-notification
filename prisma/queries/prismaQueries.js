@@ -48,13 +48,13 @@ export async function updatedService(serviceId, editedService) {
 */
 
 export async function updatedService(serviceId, editedService) {
-  console.log("Entering updatedService function");
+  //console.log("Entering updatedService function");
   try {
     const updated = await prisma.service.update({
       where: { id: serviceId },
       data: editedService,
     });
-    console.log("Service updated:", updated);
+    //console.log("Service updated:", updated);
     return updated;
   } catch (error) {
     console.log("Error in updatedService:", error);
@@ -63,7 +63,7 @@ export async function updatedService(serviceId, editedService) {
 }
 
 // Associates a user with a received notification
-export async function addUserToNotification(userId, notificationId) {
+/*export async function addUserToNotification(userId, notificationId) {
   return await prisma.notification.update({
     where: {
       id: notificationId,
@@ -71,8 +71,30 @@ export async function addUserToNotification(userId, notificationId) {
     data: {
       userId: userId,
     },
-  });
-
+  }); */
+  export async function addUserToNotification(userId, notificationId) {
+    try {
+      const notification = await prisma.notification.findUnique({
+        where: {
+          id: notificationId,
+        },
+      });
   
-
-}
+      const assignedUserIds = [...notification.assignedUserIds, userId];
+  
+      await prisma.notification.update({
+        where: {
+          id: notificationId,
+        },
+        data: {
+          assignedUserIds: assignedUserIds,
+        },
+      });
+  
+      console.log(`User ${userId} added to notification ${notificationId}`);
+    } catch (error) {
+      console.error(`Error adding user ${userId} to notification ${notificationId}:`, error);
+      throw error;
+    }
+  }
+  

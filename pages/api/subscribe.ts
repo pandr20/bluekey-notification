@@ -9,7 +9,7 @@ import { MqttClient } from "mqtt"
 export default async function handler( req: NextApiRequest,res: NextApiResponse) {
   
     const { clientId, userId, serviceId } = req.body;
-    console.log("Received data:", { clientId, userId, serviceId });
+    //console.log("Received data:", { clientId, userId, serviceId });
   
   //Checks if the required parameters are received
   if (!clientId || !userId || !serviceId) { 
