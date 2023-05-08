@@ -1,3 +1,4 @@
+//Voyage.tsx
 "use client";
 
 import { useUser } from "@clerk/nextjs";
@@ -15,8 +16,12 @@ export default function Voyage() {
 
   // Which service is being interacted with
   const [selectedServiceId, setSelectedServiceId] = useState("");
+  
+  const [editedService, setEditedService] = useState(null);
 
   const clientId = uuidv4(); // Generates a unique clientId (Used for MQTT session)
+
+  const messagetest = "test";
 
   useEffect(() => {
     async function fetchData() {
@@ -36,6 +41,41 @@ export default function Voyage() {
     fetchData();
   }, []);
 
+
+  useEffect(() => {
+
+    if (!editedService) return; //Won't start if editedService is not set
+
+    async function editService() {
+      try {
+        const res = await fetch("/api/editService", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          //Change to serviceId, clientId, originalService, editedService
+          body: JSON.stringify({ 
+            serviceId: selectedServiceId,
+            editedService,
+            clientId, 
+            message: messagetest,
+           }),
+          //.. message: generateEditedMessage(originalService, editedService),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to update Service")
+        }
+
+        
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    editService();
+  }, [editedService]);
+  
+
   //Debug log for when dropdown value changes
   useEffect(() => {
     console.log("showDropdown value changed:", showDropdown);
@@ -49,8 +89,14 @@ export default function Voyage() {
   };
 
 
-  const handleEditButtonClick = () => {
+  const handleEditButtonClick = (serviceId: string) => {
+    if (editable) {
+      const editedService = services.find((service) => service.id === serviceId);
+      setEditedService(editedService);
+    }
     setEditable(!editable);
+    setSelectedServiceId(serviceId);
+    console.log("Edit button clicked with serviceId:", serviceId);
   };
 
 
@@ -79,13 +125,13 @@ export default function Voyage() {
   };
 
   //Render for manager users
-  const renderEditButton = () => {
+  const renderEditButton = (serviceId: string) => {
     if (user?.firstName === "Manager") {
       return (
         <>
           <button
             className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-7 rounded absolute top-0 right-20 mt-2 mr-6"
-            onClick={handleEditButtonClick}
+            onClick={() => handleEditButtonClick(serviceId)}
           >
             {editable ? "Save" : "Edit"}
           </button>
@@ -101,7 +147,7 @@ export default function Voyage() {
   return (
     <>
       {services.map(
-        (service: {
+        (service: {  
           id: string;
           counterpart: string;
           cp_date: string;
@@ -118,7 +164,7 @@ export default function Voyage() {
               Voyage {service.id}
             </h2>
             {renderAssignButton(service.id)}
-            {renderEditButton()}
+            {renderEditButton(service.id)}
             <div className="flex flex-col sm:flex-row">
               <div className="flex-1 mb-2 sm:mb-0">
                 <p className="font-bold text-white">Counterpart:</p>

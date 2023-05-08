@@ -6,7 +6,7 @@ import { addUserToNotification } from '../prisma/queries/prismaQueries.js';
 
 
 const prisma = new PrismaClient();
-const mqttBrokerUrl = 'mqtt://localhost:1883';
+const mqttBrokerUrl = 'mqtt://mqtt:1883';
 
 
 export async function subscribeUserToServices(clientId, userId, callback) {
@@ -16,11 +16,16 @@ export async function subscribeUserToServices(clientId, userId, callback) {
     console.log('Subscriber connected to MQTT broker');
 
     // Get the services the user is subscribed to
-    const services = await prisma.service.findMany({
+    const subscriptions = await prisma.subscription.findMany({
       where: {
         userId: userId,
       },
+      include: {
+        service: true,
+      },
     });
+
+    const services = subscriptions.map(subscription => subscription.service);
 
     console.log('User subscribed services:', services);
     
@@ -42,10 +47,13 @@ export async function subscribeUserToServices(clientId, userId, callback) {
   
       // Process the received message and update the database
       // ...
+      
 
+      
       // Parse the received message
       const notificationData = JSON.parse(message.toString());
 
+      console.log("Processing received message...");
       // Associate the user with the existing notification
       await addUserToNotification(userId, notificationData.id);
 

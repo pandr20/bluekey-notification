@@ -10,8 +10,8 @@ services:
   mqtt:
     image: eclipse-mosquitto
     container_name: mqtt-broker
-    ports:
-      - 1883:1883
+    expose:
+      - 1883
     volumes:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
   nginx:
@@ -19,7 +19,9 @@ services:
     container_name: nginx
     ports:
       - 80:80
+      - 1883:1883 # Add this line to expose the MQTT port
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./mqtt.nginx.conf:/etc/nginx/mqtt.nginx.conf:ro # Add this line to include the MQTT configuration
     depends_on:
       - application
