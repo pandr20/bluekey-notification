@@ -17,7 +17,7 @@ function NotificationBell() {
     <div className="relative">
       <button className="relative" onClick={handleClick}>
         <img
-          className="h-6 w-6"
+          className="h-7 w-7"
           src="/notification-bell.png"
           alt="Notification Bell"
         />
