@@ -16,12 +16,15 @@ export default function Voyage() {
 
   // Which service is being interacted with
   const [selectedServiceId, setSelectedServiceId] = useState("");
-  
+
   const [editedService, setEditedService] = useState(null);
+  const [originalService, setOriginalService] = useState(null);
 
   const clientId = uuidv4(); // Generates a unique clientId (Used for MQTT session)
 
-  const messagetest = "test";
+  const messageTest = `Service with id ${selectedServiceId}\n has been updated from \n ${JSON.stringify(
+    originalService
+  )} \n To \n ${JSON.stringify(editedService)}`;
 
   useEffect(() => {
     async function fetchData() {
@@ -41,9 +44,7 @@ export default function Voyage() {
     fetchData();
   }, []);
 
-
   useEffect(() => {
-
     if (!editedService) return; //Won't start if editedService is not set
 
     async function editService() {
@@ -54,27 +55,25 @@ export default function Voyage() {
             "Content-Type": "application/json",
           },
           //Change to serviceId, clientId, originalService, editedService
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             serviceId: selectedServiceId,
             editedService,
-            clientId, 
-            message: messagetest,
-           }),
+            clientId,
+            message: messageTest,
+          }),
+
           //.. message: generateEditedMessage(originalService, editedService),
         });
 
         if (!res.ok) {
-          throw new Error("Failed to update Service")
+          throw new Error("Failed to update Service");
         }
-
-        
       } catch (error) {
         console.error(error);
       }
     }
     editService();
   }, [editedService]);
-  
 
   //Debug log for when dropdown value changes
   useEffect(() => {
@@ -88,21 +87,17 @@ export default function Voyage() {
     console.log("Assign button clicked with serviceId:", serviceId);
   };
 
-
   const handleEditButtonClick = (serviceId: string) => {
-    if (editable) {
-      const editedService = services.find((service) => service.id === serviceId);
-      setEditedService(editedService);
-    }
+    const service = services.find((service) => service.id === serviceId);
+    setOriginalService(service);
+    setEditedService(service);
     setEditable(!editable);
     setSelectedServiceId(serviceId);
     console.log("Edit button clicked with serviceId:", serviceId);
   };
 
-
   //Render for Manager users
   const renderAssignButton = (serviceId: string) => {
-
     if (user?.firstName === "Manager") {
       return (
         <div className="flex flex-col">
@@ -147,7 +142,7 @@ export default function Voyage() {
   return (
     <>
       {services.map(
-        (service: {  
+        (service: {
           id: string;
           counterpart: string;
           cp_date: string;
