@@ -44,7 +44,7 @@ function NotificationBell() {
         )}
       </button>
       {showNotifications && notifications.length > 0 && (
-        <div className="absolute top-8 right-0 w-48 bg-gray-700 rounded-md shadow-lg py-2 px-3 mt-2">
+        <div className="absolute top-8 right-0 w-48 bg-gray-700 rounded-md shadow-lg py-2 px-3 mt-2 max-h-64 overflow-y-scroll scroll-smooth">
           {notifications.map(
             (notification: {
               id: string;
@@ -57,8 +57,8 @@ function NotificationBell() {
               priority: number;
               message: string;
             }) => (
-              <div key={notification.id} className=" py-2 break-words">
-                <span className="text-white ">
+              <div key={notification.id} className="py-2 break-words">
+                <span className="text-white">
                   <p className="p-0">Message: {notification.message}</p>
                   <p className="p-0">Created at: {notification.created_at}</p>
                   <p className="p-0">ServiceId: {notification.serviceId}</p>
@@ -66,7 +66,7 @@ function NotificationBell() {
 
                   <StateDropDown state={""} />
                 </span>
-                <hr className=" border-gray-300 mt-3" />
+                <hr className="border-gray-300 mt-3" />
               </div>
             )
           )}
