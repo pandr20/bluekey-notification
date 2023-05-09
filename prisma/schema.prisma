@@ -56,10 +56,19 @@ model Subscription {
 }
 
 enum NotificationState {
-  UNREAD
+  UNREAD 
   READ
   PROCESSING
   COMPLETED
   // Add additional states here as needed
+}
+
+model States {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId 
+  unread String
+  read String
+  processing String
+  completed String
+
 }
 

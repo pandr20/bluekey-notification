@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import StateDropDown from "./StateDropDown";
 
 function NotificationBell() {
   const [notifications, setNotifications] = useState([]);
@@ -56,15 +57,13 @@ function NotificationBell() {
               priority: number;
               message: string;
             }) => (
-              <div
-                key={notification.id}
-                className="notification py-2 break-words"
-              >
+              <div key={notification.id} className=" py-2 break-words">
                 <span className="text-white ">
                   {notification.message} - {notification.created_at} -{" "}
                   {notification.serviceId}
+                  <StateDropDown state={""} />
                 </span>
-                <hr className=" border-gray-300" />
+                <hr className=" border-gray-300 mt-3" />
               </div>
             )
           )}
