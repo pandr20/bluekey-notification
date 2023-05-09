@@ -59,8 +59,11 @@ function NotificationBell() {
             }) => (
               <div key={notification.id} className=" py-2 break-words">
                 <span className="text-white ">
-                  {notification.message} - {notification.created_at} -{" "}
-                  {notification.serviceId}
+                  <p className="p-0">Message: {notification.message}</p>
+                  <p className="p-0">Created at: {notification.created_at}</p>
+                  <p className="p-0">ServiceId: {notification.serviceId}</p>
+                  <p className="p-0">State: {notification.state}</p>
+
                   <StateDropDown state={""} />
                 </span>
                 <hr className=" border-gray-300 mt-3" />
