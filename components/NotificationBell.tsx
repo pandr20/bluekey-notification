@@ -55,7 +55,7 @@ function NotificationBell() {
         )}
       </button>
       {showNotifications && notifications.length > 0 && (
-        <div className="absolute top-8 right-0 w-60 bg-gray-700 rounded-md shadow-lg py-2 px-3 mt-2 max-h-64 overflow-y-scroll scroll-smooth">
+        <div className="absolute top-8 right-0 w-100 bg-gray-700 rounded-md shadow-lg py-2 px-3 mt-2 max-h-64 overflow-y-scroll scroll-smooth">
           {notifications
             .slice()
             .reverse()
