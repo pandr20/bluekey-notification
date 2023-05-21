@@ -15,7 +15,9 @@ export default async function handler(
     try {
       console.log("starts the db query");
       // Update the service in the database
-      const { id, ...updatedFields } = editedService;
+      let tempService = JSON.parse(editedService)
+      const { id, ...updatedFields } = tempService;
+      console.log("New Edited Data", { id, tempService, updatedFields })
       await updatedService(serviceId, updatedFields);
       console.log(`Service ${serviceId} has been updated`);
 
