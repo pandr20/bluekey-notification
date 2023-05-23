@@ -44,11 +44,6 @@ export async function subscribeUserToServices(clientId, userId, callback) {
   
     client.on('message', async (topic, message) => {
       console.log(`Received message on topic ${topic}: ${message.toString()}`);
-  
-      // Process the received message and update the database
-      // ...
-      
-
       
       // Parse the received message
       const notificationData = JSON.parse(message.toString());
