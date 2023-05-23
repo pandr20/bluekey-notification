@@ -22,7 +22,6 @@ export default async function handler( req: NextApiRequest,res: NextApiResponse)
     await addServiceSubscription(userId, serviceId);
 
     //Subscribe the user to the service using MQTT
-    console.log(`Subscribing user ${userId} to service with client id ${clientId}`)
     await subscribeUserToServices(clientId, userId, (client: MqttClient) => { 
         console.log(`User ${userId} subscribed to services with client id ${clientId}:` , userId);
       });

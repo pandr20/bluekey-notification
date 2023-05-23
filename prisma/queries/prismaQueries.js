@@ -5,14 +5,18 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 
-//Retrieves all services related to the provided user ID.
+// Get the services the user is subscribed to
 export async function getUserServices(userId) {
-  return await prisma.service.findMany({
+  return await prisma.subscription.findMany({
     where: {
       userId: userId,
     },
+    include: {
+      service: true
+    }
   });
 }
+
 
 //Creates a new notification with the provided data.
 export async function createNotification(notificationData) {
@@ -37,15 +41,6 @@ export async function addServiceSubscription(userId, serviceId) {
   });
 }
 
-
-/*
-export async function updatedService(serviceId, editedService) {
-  return await prisma.service.update({
-    where: { id: serviceId },
-    data: editedService,
-  });
-}
-*/
 
 export async function updatedService(serviceId, editedService) {
   console.log("Entering updatedService function");
@@ -72,7 +67,4 @@ export async function addUserToNotification(userId, notificationId) {
       userId: userId,
     },
   });
-
-  
-
 }

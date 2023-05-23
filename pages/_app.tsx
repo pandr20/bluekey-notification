@@ -9,10 +9,12 @@ import LoginBtn from "@/components/login-btn";
 import VoyageData from "@/data/VoyageData.json";
 import { SessionProvider, useSession } from "next-auth/react";
 import { ClerkProvider } from "@clerk/nextjs";
+import MqttProvider from "@/components/mqttProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ClerkProvider {...pageProps}>
+      <MqttProvider uri="ws://localhost:9001/"> 
       <div className="bg-primary-black">
         <div className=" p-4">
           <Navbar />
@@ -23,6 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           {/* <Novu /> */}
         </div>
       </div>
+      </MqttProvider>
     </ClerkProvider>
   );
 }
