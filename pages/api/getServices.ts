@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    //get all services from prisma
+    //Prisma Query for getting all services
 
     const data = await prisma.service.findMany();
     return res.status(200).json(data);

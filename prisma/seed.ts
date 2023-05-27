@@ -4,7 +4,9 @@ const prisma = new PrismaClient()
 
 async function main() {
 
-    
+    await prisma.notification.deleteMany({});
+
+    /*
     const service1 = await prisma.service.create({
       data: {
         counterpart: 'ABC Shipping Co.',
@@ -47,8 +49,7 @@ async function main() {
       }
     })
 
-
-  console.log({ service1, service2, service3,  })
+    */
 }
 
 main()

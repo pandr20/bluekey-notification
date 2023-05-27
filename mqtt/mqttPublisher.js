@@ -3,11 +3,6 @@ import { createNotification } from "../prisma/queries/prismaQueries.js";
 
 const mqttBrokerUrl = "mqtt://mqtt:1883";
 
-//Should be added in the respective Next.js file
-//Or in Publisher & Subscriber IF it doesn't matter if publ & sub has the same clientID- If so, remove clientId in the function
-//import { v4 as uuidv4 } from 'uuid';
-//const clientId = uuidv4(); // Generates a unique clientId
-
 export async function publishNotification(
   clientId,
   serviceId,
@@ -31,7 +26,6 @@ export async function publishNotification(
         console.log(`Published notification to topic: ${topic}`);
       }
     });
-
     client.end();
   });
 
