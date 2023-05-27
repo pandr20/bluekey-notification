@@ -9,6 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   try {
+    //Getting the user list from Clerk API
 
     const users = await clerkClient.users.getUserList();
     res.status(200).json(users);

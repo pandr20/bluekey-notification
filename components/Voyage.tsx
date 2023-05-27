@@ -54,7 +54,6 @@ export default function Voyage() {
           headers: {
             "Content-Type": "application/json",
           },
-          //Change to serviceId, clientId, originalService, editedService
           body: JSON.stringify({
             serviceId: selectedServiceId,
             editedService,
