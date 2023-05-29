@@ -2,13 +2,12 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import VoyageData from "../data/VoyageData.json";
 import UserDropdown from "./UserDropDown";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Voyage() {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { user } = useUser();
   const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
