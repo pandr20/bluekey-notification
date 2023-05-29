@@ -1,13 +1,5 @@
-import { signIn, signOut, useSession } from "next-auth/react";
-import {
-  SignIn,
-  SignInButton,
-  SignOutButton,
-  UserButton,
-  useUser,
-  WithUser,
-} from "@clerk/nextjs";
-import React, { useState } from "react";
+import { SignInButton, SignOutButton, useUser, WithUser } from "@clerk/nextjs";
+import React from "react";
 import NotificationBell from "./NotificationBell";
 
 function Navbar() {
