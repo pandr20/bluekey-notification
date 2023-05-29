@@ -3,7 +3,6 @@ import type { AppProps } from "next/app";
 import "../styles/globals.css";
 import Voyage from "@/components/Voyage";
 import Navbar from "@/components/Navbar";
-import VoyageData from "@/data/VoyageData.json";
 import { ClerkProvider } from "@clerk/nextjs";
 
 function MyApp({ pageProps }: AppProps) {
