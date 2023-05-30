@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate",
-    "test": "jest"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.8.6",
