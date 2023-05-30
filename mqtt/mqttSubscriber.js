@@ -30,9 +30,6 @@ export async function subscribeUserToServices(clientId, userId, callback) {
     console.log('User subscribed services:', services);
     
 
-    // Get the services the user is subscribed to
-    //Delete above query, and use this once confirmed to work
-    //const services = await getUserServices();
 
   // Subscribe to MQTT topics for each service
     services.forEach((service) => {
