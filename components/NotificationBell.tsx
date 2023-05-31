@@ -4,6 +4,7 @@ import StateDropDown from "./StateDropDown";
 function NotificationBell() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [state, setState] = useState("Unread"); // Set "Unread" as the default state
 
   const fetchNotifications = async () => {
     try {
@@ -38,6 +39,10 @@ function NotificationBell() {
 
   const handleClick = () => {
     setShowNotifications(!showNotifications);
+  };
+
+  const handleStateChange = (newState: string) => {
+    setState(newState);
   };
 
   return (
@@ -86,8 +91,9 @@ function NotificationBell() {
                       Created at: {notification.created_at}
                     </p>
                     <p className="p-1">ServiceId: {notification.serviceId}</p>
-                    <p className="p-1">State: {notification.state}</p>
-                    <StateDropDown state={""} />
+                    <p className="p-1">State: {state}</p>{" "}
+                    {/* Update this line */}
+                    <StateDropDown setState={handleStateChange} />
                   </span>
                   <hr className="border-gray-300 mt-3" />
                 </div>

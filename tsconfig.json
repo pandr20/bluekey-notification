@@ -18,6 +18,12 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "mqtt/publisher.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "mqtt/publisher.js",
+    "components/state.jsx"
+  ],
   "exclude": ["node_modules"]
 }
