@@ -1,65 +1,64 @@
 {
-    "voyages": [
-      {
-        "id": 1,
-        "counterpart": "ABC Shipping Co.",
-        "cp_date": "2022-01-05",
-        "laycan_range": "2022-01-10 - 2022-01-15",
-        "eta_load": "2022-01-12",
-        "loading_port": "Port A",
-        "eta_disch": "2022-01-25",
-        "discharge_port": "Port B",
-        "freight": 7500,
-        "status": "ongoing"
-      },
-      {
-        "id": 2,
-        "counterpart": "DEF Shipping Co.",
-        "cp_date": "2022-02-10",
-        "laycan_range": "2022-02-15 - 2022-02-25",
-        "eta_load": "2022-02-18",
-        "loading_port": "Port C",
-        "eta_disch": "2022-03-05",
-        "discharge_port": "Port D",
-        "freight": 10000,
-        "status": "completed"
-      },
-      {
-        "id": 3,
-        "counterpart": "GHI Shipping Co.",
-        "cp_date": "2022-03-20",
-        "laycan_range": "2022-03-25 - 2022-04-05",
-        "eta_load": "2022-04-01",
-        "loading_port": "Port E",
-        "eta_disch": "2022-04-15",
-        "discharge_port": "Port F",
-        "freight": 12500,
-        "status": "ongoing"
-      },
-      {
-        "id": 4,
-        "counterpart": "JKL Shipping Co.",
-        "cp_date": "2022-04-10",
-        "laycan_range": "2022-04-15 - 2022-04-25",
-        "eta_load": "2022-04-20",
-        "loading_port": "Port G",
-        "eta_disch": "2022-05-05",
-        "discharge_port": "Port H",
-        "freight": 15000,
-        "status": "cancelled"
-      },
-      {
-        "id": 5,
-        "counterpart": "MNO Shipping Co.",
-        "cp_date": "2022-05-15",
-        "laycan_range": "2022-05-20 - 2022-05-30",
-        "eta_load": "2022-05-25",
-        "loading_port": "Port I",
-        "eta_disch": "2022-06-10",
-        "discharge_port": "Port J",
-        "freight": 17500,
-        "status": "ongoing"
-      }
-    ]
-  }
-  
+  "voyages": [
+    {
+      "id": 1,
+      "counterpart": "ABC Shipping Co.",
+      "cp_date": "2022-01-05",
+      "laycan_range": "2022-01-10 - 2022-01-15",
+      "eta_load": "2022-01-12",
+      "loading_port": "Port A",
+      "eta_disch": "2022-01-25",
+      "discharge_port": "Port B",
+      "freight": 7500,
+      "status": "ongoing"
+    },
+    {
+      "id": 2,
+      "counterpart": "DEF Shipping Co.",
+      "cp_date": "2022-02-10",
+      "laycan_range": "2022-02-15 - 2022-02-25",
+      "eta_load": "2022-02-18",
+      "loading_port": "Port C",
+      "eta_disch": "2022-03-05",
+      "discharge_port": "Port D",
+      "freight": 10000,
+      "status": "completed"
+    },
+    {
+      "id": 3,
+      "counterpart": "GHI Shipping Co.",
+      "cp_date": "2022-03-20",
+      "laycan_range": "2022-03-25 - 2022-04-05",
+      "eta_load": "2022-04-01",
+      "loading_port": "Port E",
+      "eta_disch": "2022-04-15",
+      "discharge_port": "Port F",
+      "freight": 12500,
+      "status": "ongoing"
+    },
+    {
+      "id": 4,
+      "counterpart": "JKL Shipping Co.",
+      "cp_date": "2022-04-10",
+      "laycan_range": "2022-04-15 - 2022-04-25",
+      "eta_load": "2022-04-20",
+      "loading_port": "Port G",
+      "eta_disch": "2022-05-05",
+      "discharge_port": "Port H",
+      "freight": 15000,
+      "status": "cancelled"
+    },
+    {
+      "id": 5,
+      "counterpart": "MNO Shipping Co.",
+      "cp_date": "2022-05-15",
+      "laycan_range": "2022-05-20 - 2022-05-30",
+      "eta_load": "2022-05-25",
+      "loading_port": "Port I",
+      "eta_disch": "2022-06-10",
+      "discharge_port": "Port J",
+      "freight": 17500,
+      "status": "ongoing"
+    }
+  ]
+}

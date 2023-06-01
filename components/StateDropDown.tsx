@@ -1,30 +1,33 @@
-// components/UserDropdown.tsx
-
 import React, { useState, useEffect } from "react";
-import { User } from "@clerk/clerk-sdk-node";
 
 type NotificationState = {
-  state: string;
+  setState: (state: string) => void;
 };
 
-const StateDropDown: React.FC<NotificationState> = (
-  {
-    //   clientId,
-    //   serviceId,
-  }
-) => {
-  const [states, setStates] = useState([]);
+type State = {
+  id: string;
+  name: string;
+};
+
+const StateDropDown: React.FC<NotificationState> = ({ setState }) => {
+  const [states, setStates] = useState<State[]>([]); // Explicit type annotation
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedState, setSelectedState] = useState<string | null>(null);
+  const [selectedState, setSelectedState] = useState<string>("Unread"); // Set "Unread" as the default state
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch("/api/getStates");
-        if (!res.ok) {
-          throw new Error("Failed to fetch services");
-        }
-        const result = await res.json();
+        // Simulate fetching states from API
+        const result = await new Promise<State[]>((resolve) =>
+          setTimeout(() => {
+            resolve([
+              { id: "1", name: "Unread" },
+              { id: "2", name: "Read" },
+              { id: "3", name: "Processing" },
+              { id: "4", name: "Completed" },
+            ]);
+          }, 1000)
+        );
         setStates(result);
       } catch (error) {
         console.error(error);
@@ -33,74 +36,40 @@ const StateDropDown: React.FC<NotificationState> = (
     fetchData();
   }, []);
 
-  useEffect(() => {}, [showDropdown]);
-
-  // Subscribe user to pointed serviceId and add subscription to DB
-  const handleConfirm = async () => {
+  // Update the selected state
+  const handleConfirm = () => {
     if (selectedState) {
-      try {
-        const response = await fetch("/api/updateService", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ setStates, setSelectedState }),
-        });
+      setState(selectedState); // Update the state in the parent component
 
-        if (!response.ok) {
-          throw new Error("Failed to update state to notification");
-        }
-
-        console.log("User changed state to:", selectedState);
-
-        // Close the dropdown
-        setShowDropdown(false);
-      } catch (error) {
-        console.error(error);
-      }
+      // Close the dropdown
+      setShowDropdown(false);
     }
   };
 
   return (
     <div>
-      {/* Button to toggle user dropdown */}
       <button
         className="text-black bg-blue rounded-lg p-1 mt-2 mb-2"
         onClick={() => setShowDropdown(!showDropdown)}
       >
         Choose State
       </button>
-      {/* Render when showDropDown is true */}
       {showDropdown && (
         <div>
-          {/* Dropdown to select a user */}
-          {/* Important: Extracts the userId of chosen user */}
           <select
             className="bg-dimBlue rounded-full w-40"
+            value={selectedState} // Add value attribute
             onChange={(e) => setSelectedState(e.target.value)}
           >
-            {/* <option value="">Select a state</option> */}
-            {states.map(
-              (state: {
-                unread: string;
-                read: string;
-                processing: string;
-                completed: string;
-              }) => (
-                <>
-                  <option>{state.unread}</option>
-                  <option>{state.read}</option>
-                  <option>{state.processing}</option>
-                  <option>{state.completed}</option>
-                </>
-              )
-            )}
+            {states.map((state: State) => (
+              <option key={state.id} value={state.name}>
+                {state.name}
+              </option>
+            ))}
           </select>
-          {/* If confirmed, runs the subscribe API route */}
           <button className="text-blue p-3" onClick={handleConfirm}>
             Confirm
           </button>
-          {/* Cancels the use-case */}
           <button className="text-white" onClick={() => setShowDropdown(false)}>
             Cancel
           </button>
