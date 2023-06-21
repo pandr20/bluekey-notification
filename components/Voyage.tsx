@@ -106,8 +106,8 @@ export default function Voyage() {
             Assign
           </button>
           <div className="absolute end-0 p-3">
-            {/* When showDropdown is true, UserDropDown is rendered and receives the two props*/}
-            {showDropdown && (
+            {/* When showDropdown is true and the selectedServiceId matches the current serviceId, UserDropDown is rendered and receives the two props*/}
+            {showDropdown && selectedServiceId === serviceId && (
               <UserDropdown clientId={clientId} serviceId={selectedServiceId} />
             )}
           </div>
