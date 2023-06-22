@@ -83,15 +83,17 @@ function NotificationBell() {
               }) => (
                 <div key={notification.id} className="py-2 break-words">
                   <span className="text-white">
-                    <p
-                      className="p-0 break-words w-full pl-4 "
-                      dangerouslySetInnerHTML={{
-                        __html: `Message: ${notification.message.replace(
-                          /\n/g,
-                          "<br>"
-                        )}`,
-                      }}
-                    ></p>
+                    {notification && notification.message && (
+                      <p
+                        className="p-0 break-words w-full pl-4"
+                        dangerouslySetInnerHTML={{
+                          __html: `Message: ${notification.message.replace(
+                            /\n/g,
+                            "<br>"
+                          )}`,
+                        }}
+                      ></p>
+                    )}
                     <p className="p-1 pt-2">
                       Created at: {notification.created_at}
                     </p>

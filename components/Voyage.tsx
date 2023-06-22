@@ -16,14 +16,26 @@ export default function Voyage() {
   // Which service is being interacted with
   const [selectedServiceId, setSelectedServiceId] = useState("");
 
-  const [editedService, setEditedService] = useState("");
-  const [originalService, setOriginalService] = useState("");
+  const [editedService, setEditedService] = useState<any>({});
+  const [originalService, setOriginalService] = useState<any>({});
 
   const clientId = uuidv4(); // Generates a unique clientId (Used for MQTT session)
 
   const messageTest = `Service with id ${selectedServiceId}\n has been updated from \n ${JSON.stringify(
     originalService
   )} \n To \n ${JSON.stringify(editedService)}`;
+
+  const generateEditedMessage = (originalService: any, editedService: any) => {
+    let message = `Service with id ${selectedServiceId}\n`;
+
+    for (const key in editedService) {
+      if (originalService[key] !== editedService[key]) {
+        message += `Field '${key}' has been updated from '${originalService[key]}' to '${editedService[key]}'\n`;
+      }
+    }
+
+    return message;
+  };
 
   useEffect(() => {
     async function fetchData() {
