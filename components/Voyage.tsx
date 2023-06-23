@@ -21,21 +21,24 @@ export default function Voyage() {
 
   const clientId = uuidv4(); // Generates a unique clientId (Used for MQTT session)
 
-  const messageTest = `Service with id ${selectedServiceId}\n has been updated from \n ${JSON.stringify(
-    originalService
-  )} \n To \n ${JSON.stringify(editedService)}`;
+  const messageTest = `Service with id ${selectedServiceId}\n has been updated:\n${generateFieldChanges(
+    originalService,
+    editedService
+  )}`;
 
-  const generateEditedMessage = (originalService: any, editedService: any) => {
-    let message = `Service with id ${selectedServiceId}\n`;
+  function generateFieldChanges(original: any, edited: any): string {
+    const changes: string[] = [];
 
-    for (const key in editedService) {
-      if (originalService[key] !== editedService[key]) {
-        message += `Field '${key}' has been updated from '${originalService[key]}' to '${editedService[key]}'\n`;
+    for (const key in edited) {
+      if (original[key] !== edited[key]) {
+        changes.push(
+          `Field: ${key}\nBefore: ${original[key]}\nAfter: ${edited[key]}\n`
+        );
       }
     }
 
-    return message;
-  };
+    return changes.join("\n");
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -56,7 +59,7 @@ export default function Voyage() {
   }, []);
 
   useEffect(() => {
-    if (!editedService) return; //Won't start if editedService is not set
+    if (!editedService || !selectedServiceId) return;
 
     async function editService() {
       try {
@@ -71,8 +74,6 @@ export default function Voyage() {
             clientId,
             message: messageTest,
           }),
-
-          //.. message: generateEditedMessage(originalService, editedService),
         });
 
         if (!res.ok) {
@@ -83,7 +84,7 @@ export default function Voyage() {
       }
     }
     editService();
-  }, [editedService]);
+  }, [editedService, selectedServiceId]);
 
   //Debug log for when dropdown value changes
   useEffect(() => {
@@ -98,14 +99,30 @@ export default function Voyage() {
   };
 
   const handleEditButtonClick = (serviceId: string) => {
-    const service = services.find((service) => service.id === serviceId);
-    setOriginalService(service);
-    setEditedService(service);
-    setEditable((prevEditable) => !prevEditable);
-    setSelectedServiceId(serviceId);
-    console.log("Edit button clicked with serviceId:", serviceId);
-  };
+    if (editable && selectedServiceId === serviceId) {
+      // Save the changes
+      setEditable(false);
+      setOriginalService({});
+      setEditedService({});
 
+      // Update the original service object with the edited fields
+      const serviceIndex = services.findIndex(
+        (service) => service.id === serviceId
+      );
+      if (serviceIndex !== -1) {
+        const updatedServices = [...services];
+        updatedServices[serviceIndex] = { ...editedService };
+        setServices(updatedServices);
+      }
+    } else {
+      // Enter editable mode
+      const service = services.find((service) => service.id === serviceId);
+      setOriginalService(service);
+      setEditedService({ ...service });
+      setEditable(true);
+    }
+    setSelectedServiceId(serviceId);
+  };
   //Render for Manager users
   const renderAssignButton = (serviceId: string) => {
     if (user?.firstName === "Manager") {
@@ -181,18 +198,12 @@ export default function Voyage() {
                       <input
                         className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        value={service.counterpart}
+                        value={editedService.counterpart}
                         onChange={(e) =>
-                          setServices((prevServices) =>
-                            prevServices.map((prevService) =>
-                              prevService.id === service.id
-                                ? {
-                                    ...prevService,
-                                    counterpart: e.target.value,
-                                  }
-                                : prevService
-                            )
-                          )
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            counterpart: e.target.value,
+                          }))
                         }
                       />
                     ) : (
@@ -207,15 +218,12 @@ export default function Voyage() {
                       <input
                         className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        value={service.eta_load}
+                        value={editedService.eta_load}
                         onChange={(e) =>
-                          setServices((prevServices) =>
-                            prevServices.map((prevService) =>
-                              prevService.id === service.id
-                                ? { ...prevService, eta_load: e.target.value }
-                                : prevService
-                            )
-                          )
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            eta_load: e.target.value,
+                          }))
                         }
                       />
                     ) : (
@@ -230,15 +238,12 @@ export default function Voyage() {
                       <input
                         className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        value={service.freight}
+                        value={editedService.freight}
                         onChange={(e) =>
-                          setServices((prevServices) =>
-                            prevServices.map((prevService) =>
-                              prevService.id === service.id
-                                ? { ...prevService, freight: e.target.value }
-                                : prevService
-                            )
-                          )
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            freight: e.target.value,
+                          }))
                         }
                       />
                     ) : (
@@ -255,15 +260,12 @@ export default function Voyage() {
                       <input
                         className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        value={service.cp_date}
+                        value={editedService.cp_date}
                         onChange={(e) =>
-                          setServices((prevServices) =>
-                            prevServices.map((prevService) =>
-                              prevService.id === service.id
-                                ? { ...prevService, cp_date: e.target.value }
-                                : prevService
-                            )
-                          )
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            cp_date: e.target.value,
+                          }))
                         }
                       />
                     ) : (
@@ -276,18 +278,12 @@ export default function Voyage() {
                       <input
                         className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        value={service.laycan_range}
+                        value={editedService.laycan_range}
                         onChange={(e) =>
-                          setServices((prevServices) =>
-                            prevServices.map((prevService) =>
-                              prevService.id === service.id
-                                ? {
-                                    ...prevService,
-                                    laycan_range: e.target.value,
-                                  }
-                                : prevService
-                            )
-                          )
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            laycan_range: e.target.value,
+                          }))
                         }
                       />
                     ) : (
@@ -302,18 +298,12 @@ export default function Voyage() {
                       <input
                         className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        value={service.loading_port}
+                        value={editedService.loading_port}
                         onChange={(e) =>
-                          setServices((prevServices) =>
-                            prevServices.map((prevService) =>
-                              prevService.id === service.id
-                                ? {
-                                    ...prevService,
-                                    loading_port: e.target.value,
-                                  }
-                                : prevService
-                            )
-                          )
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            loading_port: e.target.value,
+                          }))
                         }
                       />
                     ) : (
@@ -326,18 +316,12 @@ export default function Voyage() {
                       <input
                         className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        value={service.discharge_port}
+                        value={editedService.discharge_port}
                         onChange={(e) =>
-                          setServices((prevServices) =>
-                            prevServices.map((prevService) =>
-                              prevService.id === service.id
-                                ? {
-                                    ...prevService,
-                                    discharge_port: e.target.value,
-                                  }
-                                : prevService
-                            )
-                          )
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            discharge_port: e.target.value,
+                          }))
                         }
                       />
                     ) : (
@@ -352,15 +336,12 @@ export default function Voyage() {
                       <input
                         className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        value={service.eta_disch}
+                        value={editedService.eta_disch}
                         onChange={(e) =>
-                          setServices((prevServices) =>
-                            prevServices.map((prevService) =>
-                              prevService.id === service.id
-                                ? { ...prevService, eta_dish: e.target.value }
-                                : prevService
-                            )
-                          )
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            eta_disch: e.target.value,
+                          }))
                         }
                       />
                     ) : (
@@ -373,15 +354,12 @@ export default function Voyage() {
                       <input
                         className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        value={service.status}
+                        value={editedService.status}
                         onChange={(e) =>
-                          setServices((prevServices) =>
-                            prevServices.map((prevService) =>
-                              prevService.id === service.id
-                                ? { ...prevService, status: e.target.value }
-                                : prevService
-                            )
-                          )
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            status: e.target.value,
+                          }))
                         }
                       />
                     ) : (
