@@ -16,14 +16,29 @@ export default function Voyage() {
   // Which service is being interacted with
   const [selectedServiceId, setSelectedServiceId] = useState("");
 
-  const [editedService, setEditedService] = useState(null);
-  const [originalService, setOriginalService] = useState(null);
+  const [editedService, setEditedService] = useState<any>({});
+  const [originalService, setOriginalService] = useState<any>({});
 
   const clientId = uuidv4(); // Generates a unique clientId (Used for MQTT session)
 
-  const messageTest = `Service with id ${selectedServiceId}\n has been updated from \n ${JSON.stringify(
-    originalService
-  )} \n To \n ${JSON.stringify(editedService)}`;
+  const messageTest = `Service with id ${selectedServiceId}\n has been updated:\n${generateFieldChanges(
+    originalService,
+    editedService
+  )}`;
+
+  function generateFieldChanges(original: any, edited: any): string {
+    const changes: string[] = [];
+
+    for (const key in edited) {
+      if (original[key] !== edited[key]) {
+        changes.push(
+          `Field: ${key}\nBefore: ${original[key]}\nAfter: ${edited[key]}\n`
+        );
+      }
+    }
+
+    return changes.join("\n");
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -44,7 +59,7 @@ export default function Voyage() {
   }, []);
 
   useEffect(() => {
-    if (!editedService) return; //Won't start if editedService is not set
+    if (!editedService || !selectedServiceId) return;
 
     async function editService() {
       try {
@@ -59,8 +74,6 @@ export default function Voyage() {
             clientId,
             message: messageTest,
           }),
-
-          //.. message: generateEditedMessage(originalService, editedService),
         });
 
         if (!res.ok) {
@@ -71,7 +84,7 @@ export default function Voyage() {
       }
     }
     editService();
-  }, [editedService]);
+  }, [editedService, selectedServiceId]);
 
   //Debug log for when dropdown value changes
   useEffect(() => {
@@ -86,14 +99,30 @@ export default function Voyage() {
   };
 
   const handleEditButtonClick = (serviceId: string) => {
-    const service = services.find((service) => service.id === serviceId);
-    setOriginalService(service);
-    setEditedService(service);
-    setEditable(!editable);
-    setSelectedServiceId(serviceId);
-    console.log("Edit button clicked with serviceId:", serviceId);
-  };
+    if (editable && selectedServiceId === serviceId) {
+      // Save the changes
+      setEditable(false);
+      setOriginalService({});
+      setEditedService({});
 
+      // Update the original service object with the edited fields
+      const serviceIndex = services.findIndex(
+        (service) => service.id === serviceId
+      );
+      if (serviceIndex !== -1) {
+        const updatedServices = [...services];
+        updatedServices[serviceIndex] = { ...editedService };
+        setServices(updatedServices);
+      }
+    } else {
+      // Enter editable mode
+      const service = services.find((service) => service.id === serviceId);
+      setOriginalService(service);
+      setEditedService({ ...service });
+      setEditable(true);
+    }
+    setSelectedServiceId(serviceId);
+  };
   //Render for Manager users
   const renderAssignButton = (serviceId: string) => {
     if (user?.firstName === "Manager") {
@@ -106,8 +135,8 @@ export default function Voyage() {
             Assign
           </button>
           <div className="absolute end-0 p-3">
-            {/* When showDropdown is true, UserDropDown is rendered and receives the two props*/}
-            {showDropdown && (
+            {/* When showDropdown is true and the selectedServiceId matches the current serviceId, UserDropDown is rendered and receives the two props*/}
+            {showDropdown && selectedServiceId === serviceId && (
               <UserDropdown clientId={clientId} serviceId={selectedServiceId} />
             )}
           </div>
@@ -120,13 +149,14 @@ export default function Voyage() {
   //Render for manager users
   const renderEditButton = (serviceId: string) => {
     if (user?.firstName === "Manager") {
+      const isEditable = editable && selectedServiceId === serviceId;
       return (
         <>
           <button
             className="bg-blue hover:bg-dimBlue text-primary-black font-bold py-2 px-7 rounded absolute top-0 right-20 mt-2 mr-6"
             onClick={() => handleEditButtonClick(serviceId)}
           >
-            {editable ? "Save" : "Edit"}
+            {isEditable ? "Save" : "Edit"}
           </button>
         </>
       );
@@ -151,223 +181,196 @@ export default function Voyage() {
           discharge_port: string;
           freight: number;
           status: string;
-        }) => (
-          <div className="border border-gray-300 rounded-lg shadow-lg p-6 m-6 relative">
-            <h2 className="text-white text-lg font-bold mb-4">
-              Voyage {service.id}
-            </h2>
-            {renderAssignButton(service.id)}
-            {renderEditButton(service.id)}
-            <div className="flex flex-col sm:flex-row">
-              <div className="flex-1 mb-2 sm:mb-0">
-                <p className="font-bold text-white">Counterpart:</p>
-                <p className="text-dimWhite">
-                  {editable ? (
-                    <input
-                      className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      value={service.counterpart}
-                      onChange={(e) =>
-                        setServices((prevServices) =>
-                          prevServices.map((prevService) =>
-                            prevService.id === service.id
-                              ? { ...prevService, counterpart: e.target.value }
-                              : prevService
-                          )
-                        )
-                      }
-                    />
-                  ) : (
-                    service.counterpart
-                  )}
-                </p>
+        }) => {
+          const isEditable = editable && selectedServiceId === service.id;
+          return (
+            <div className="border border-gray-300 rounded-lg shadow-lg p-6 m-6 relative">
+              <h2 className="text-white text-lg font-bold mb-4">
+                Voyage {service.id}
+              </h2>
+              {renderAssignButton(service.id)}
+              {renderEditButton(service.id)}
+              <div className="flex flex-col sm:flex-row">
+                <div className="flex-1 mb-2 sm:mb-0">
+                  <p className="font-bold text-white">Counterpart:</p>
+                  <p className="text-dimWhite">
+                    {isEditable ? (
+                      <input
+                        className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        value={editedService.counterpart}
+                        onChange={(e) =>
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            counterpart: e.target.value,
+                          }))
+                        }
+                      />
+                    ) : (
+                      service.counterpart
+                    )}
+                  </p>
+                </div>
+                <div className="flex-1 mb-2 sm:mb-0">
+                  <p className="font-bold text-white">ETA Load:</p>
+                  <p className="text-dimWhite">
+                    {isEditable ? (
+                      <input
+                        className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        value={editedService.eta_load}
+                        onChange={(e) =>
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            eta_load: e.target.value,
+                          }))
+                        }
+                      />
+                    ) : (
+                      service.eta_load
+                    )}
+                  </p>
+                </div>
+                <div className="flex-1 mb-2 sm:mb-0">
+                  <p className="font-bold text-white">Freight:</p>
+                  <p className="text-dimWhite">
+                    {isEditable ? (
+                      <input
+                        className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        value={editedService.freight}
+                        onChange={(e) =>
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            freight: e.target.value,
+                          }))
+                        }
+                      />
+                    ) : (
+                      service.freight
+                    )}
+                  </p>
+                </div>
               </div>
-              <div className="flex-1 mb-2 sm:mb-0">
-                <p className="font-bold text-white">ETA Load:</p>
-                <p className="text-dimWhite">
-                  {editable ? (
-                    <input
-                      className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      value={service.eta_load}
-                      onChange={(e) =>
-                        setServices((prevServices) =>
-                          prevServices.map((prevService) =>
-                            prevService.id === service.id
-                              ? { ...prevService, eta_load: e.target.value }
-                              : prevService
-                          )
-                        )
-                      }
-                    />
-                  ) : (
-                    service.eta_load
-                  )}
-                </p>
-              </div>
-              <div className="flex-1 mb-2 sm:mb-0">
-                <p className="font-bold text-white">Freight:</p>
-                <p className="text-dimWhite">
-                  {editable ? (
-                    <input
-                      className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      value={service.freight}
-                      onChange={(e) =>
-                        setServices((prevServices) =>
-                          prevServices.map((prevService) =>
-                            prevService.id === service.id
-                              ? { ...prevService, freight: e.target.value }
-                              : prevService
-                          )
-                        )
-                      }
-                    />
-                  ) : (
-                    service.freight
-                  )}
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row">
-              <div className="flex-1 mb-2 sm:mb-0">
-                <p className="font-bold text-white">Cp Date:</p>
-                <p className="text-dimWhite">
-                  {editable ? (
-                    <input
-                      className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      value={service.cp_date}
-                      onChange={(e) =>
-                        setServices((prevServices) =>
-                          prevServices.map((prevService) =>
-                            prevService.id === service.id
-                              ? { ...prevService, cp_date: e.target.value }
-                              : prevService
-                          )
-                        )
-                      }
-                    />
-                  ) : (
-                    service.cp_date
-                  )}
-                </p>
-                <p className="font-bold text-white mt-2">Laycan Range:</p>
-                <p className="text-dimWhite">
-                  {editable ? (
-                    <input
-                      className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      value={service.laycan_range}
-                      onChange={(e) =>
-                        setServices((prevServices) =>
-                          prevServices.map((prevService) =>
-                            prevService.id === service.id
-                              ? { ...prevService, laycan_range: e.target.value }
-                              : prevService
-                          )
-                        )
-                      }
-                    />
-                  ) : (
-                    service.laycan_range
-                  )}
-                </p>
-              </div>
-              <div className="flex-1 mb-2 sm:mb-0">
-                <p className="font-bold text-white">Loading port:</p>
-                <p className="text-dimWhite">
-                  {editable ? (
-                    <input
-                      className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      value={service.loading_port}
-                      onChange={(e) =>
-                        setServices((prevServices) =>
-                          prevServices.map((prevService) =>
-                            prevService.id === service.id
-                              ? { ...prevService, loading_port: e.target.value }
-                              : prevService
-                          )
-                        )
-                      }
-                    />
-                  ) : (
-                    service.loading_port
-                  )}
-                </p>
-                <p className="font-bold text-white mt-2">Discharge port:</p>
-                <p className="text-dimWhite">
-                  {editable ? (
-                    <input
-                      className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      value={service.discharge_port}
-                      onChange={(e) =>
-                        setServices((prevServices) =>
-                          prevServices.map((prevService) =>
-                            prevService.id === service.id
-                              ? {
-                                  ...prevService,
-                                  discharge_port: e.target.value,
-                                }
-                              : prevService
-                          )
-                        )
-                      }
-                    />
-                  ) : (
-                    service.discharge_port
-                  )}
-                </p>
-              </div>
-              <div className="flex-1 mb-2 sm:mb-0">
-                <p className="font-bold text-white">ETA Discharge:</p>
-                <p className="text-dimWhite">
-                  {editable ? (
-                    <input
-                      className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      value={service.eta_disch}
-                      onChange={(e) =>
-                        setServices((prevServices) =>
-                          prevServices.map((prevService) =>
-                            prevService.id === service.id
-                              ? { ...prevService, eta_dish: e.target.value }
-                              : prevService
-                          )
-                        )
-                      }
-                    />
-                  ) : (
-                    service.eta_disch
-                  )}
-                </p>
-                <p className="font-bold text-white">Status:</p>
-                <p className="text-dimWhite">
-                  {editable ? (
-                    <input
-                      className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      value={service.status}
-                      onChange={(e) =>
-                        setServices((prevServices) =>
-                          prevServices.map((prevService) =>
-                            prevService.id === service.id
-                              ? { ...prevService, status: e.target.value }
-                              : prevService
-                          )
-                        )
-                      }
-                    />
-                  ) : (
-                    service.status
-                  )}
-                </p>
+              <div className="flex flex-col sm:flex-row">
+                <div className="flex-1 mb-2 sm:mb-0">
+                  <p className="font-bold text-white">Cp Date:</p>
+                  <p className="text-dimWhite">
+                    {isEditable ? (
+                      <input
+                        className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        value={editedService.cp_date}
+                        onChange={(e) =>
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            cp_date: e.target.value,
+                          }))
+                        }
+                      />
+                    ) : (
+                      service.cp_date
+                    )}
+                  </p>
+                  <p className="font-bold text-white mt-2">Laycan Range:</p>
+                  <p className="text-dimWhite">
+                    {isEditable ? (
+                      <input
+                        className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        value={editedService.laycan_range}
+                        onChange={(e) =>
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            laycan_range: e.target.value,
+                          }))
+                        }
+                      />
+                    ) : (
+                      service.laycan_range
+                    )}
+                  </p>
+                </div>
+                <div className="flex-1 mb-2 sm:mb-0">
+                  <p className="font-bold text-white">Loading port:</p>
+                  <p className="text-dimWhite">
+                    {isEditable ? (
+                      <input
+                        className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        value={editedService.loading_port}
+                        onChange={(e) =>
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            loading_port: e.target.value,
+                          }))
+                        }
+                      />
+                    ) : (
+                      service.loading_port
+                    )}
+                  </p>
+                  <p className="font-bold text-white mt-2">Discharge port:</p>
+                  <p className="text-dimWhite">
+                    {isEditable ? (
+                      <input
+                        className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        value={editedService.discharge_port}
+                        onChange={(e) =>
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            discharge_port: e.target.value,
+                          }))
+                        }
+                      />
+                    ) : (
+                      service.discharge_port
+                    )}
+                  </p>
+                </div>
+                <div className="flex-1 mb-2 sm:mb-0">
+                  <p className="font-bold text-white">ETA Discharge:</p>
+                  <p className="text-dimWhite">
+                    {isEditable ? (
+                      <input
+                        className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        value={editedService.eta_disch}
+                        onChange={(e) =>
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            eta_disch: e.target.value,
+                          }))
+                        }
+                      />
+                    ) : (
+                      service.eta_disch
+                    )}
+                  </p>
+                  <p className="font-bold text-white">Status:</p>
+                  <p className="text-dimWhite">
+                    {isEditable ? (
+                      <input
+                        className=" bg-primary-black appearance-none border border-solid border-white rounded w-50 py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        value={editedService.status}
+                        onChange={(e) =>
+                          setEditedService((prevEditedService: any) => ({
+                            ...prevEditedService,
+                            status: e.target.value,
+                          }))
+                        }
+                      />
+                    ) : (
+                      service.status
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        )
+          );
+        }
       )}
     </>
   );

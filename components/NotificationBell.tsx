@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import StateDropDown from "./StateDropDown";
-
+interface NotificationState {
+  [key: string]: string;
+}
 function NotificationBell() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [state, setState] = useState("Unread"); // Set "Unread" as the default state
+  const [state, setState] = useState<NotificationState>({});
 
   const fetchNotifications = async () => {
     try {
@@ -41,8 +43,11 @@ function NotificationBell() {
     setShowNotifications(!showNotifications);
   };
 
-  const handleStateChange = (newState: string) => {
-    setState(newState);
+  const handleStateChange = (notificationId: string, newState: string) => {
+    setState((prevState) => ({
+      ...prevState,
+      [notificationId]: newState,
+    }));
   };
 
   return (
@@ -78,22 +83,30 @@ function NotificationBell() {
               }) => (
                 <div key={notification.id} className="py-2 break-words">
                   <span className="text-white">
-                    <p
-                      className="p-0 break-words w-full pl-4 "
-                      dangerouslySetInnerHTML={{
-                        __html: `Message: ${notification.message.replace(
-                          /\n/g,
-                          "<br>"
-                        )}`,
-                      }}
-                    ></p>
+                    {notification && notification.message && (
+                      <p
+                        className="p-0 break-words w-full pl-4"
+                        dangerouslySetInnerHTML={{
+                          __html: `Message: ${notification.message.replace(
+                            /\n/g,
+                            "<br>"
+                          )}`,
+                        }}
+                      ></p>
+                    )}
                     <p className="p-1 pt-2">
                       Created at: {notification.created_at}
                     </p>
                     <p className="p-1">ServiceId: {notification.serviceId}</p>
-                    <p className="p-1">State: {state}</p>{" "}
+                    <p className="p-1">
+                      State: {state[notification.id] || "Unread"}
+                    </p>{" "}
                     {/* Update this line */}
-                    <StateDropDown setState={handleStateChange} />
+                    <StateDropDown
+                      setState={(newState: string) =>
+                        handleStateChange(notification.id, newState)
+                      }
+                    />
                   </span>
                   <hr className="border-gray-300 mt-3" />
                 </div>
