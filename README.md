@@ -1,38 +1,61 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Notification System - A Tailored Shipping Platform
 
-## Getting Started
+Bachelor Project 2023 - Software Engineering, University of Southern Denmark
 
-First, run the development server:
+Students:
+
+Rasmus Jacobsen - rasmj20@student.sdu.dk
+Patrick Andreasen - pandr20@student.sdu.dk
+
+Supervisor: Kamrul Islam Shahin - kish@mmmi.sdu.dk
+
+In collaboration with: BlueKey ApS
+
+## Running Locally (With Docker)
+
+Prerequisites: Docker https://www.docker.com/
+
+1.
+
+- IMPORTANT: If testing our source code, ignore this.
+
+If creating your own, replace the .env keys with your own.
+```
+DATABASE_URL=<YOUR OWN MONGODB DATABASE>
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<YOUR OWN KEY>
+CLERK_SECRET_KEY=<YOUR OWN KEY>
+```
+2.
+First, spin up the docker-containers with this command:
+```
+docker-compose up --build
+```
+
+(If you only want to test the frontend, this will do)
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+3. Login with the following credentials:
+```
+Username: manager
+Password: CoolProgram
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Additionally features:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- Testing the mqtt broker
+  1. Switch to the mqtt-test-branch
+  2. run the ```npm install``` command
+  3. run ```npx jest``` to test the test suites of the mqtt client code
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Deploy(ed) on Vercel
 
-To learn more about Next.js, take a look at the following resources:
+When written the frontend of this project is deployed on Vercel, on this link: https://bluekey-notification.vercel.app/
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To do it yourself, the easiest way to deploy your Next.js app would be to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
