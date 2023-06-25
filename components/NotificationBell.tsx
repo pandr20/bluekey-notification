@@ -95,7 +95,8 @@ function NotificationBell() {
                       ></p>
                     )}
                     <p className="p-1 pt-2">
-                      Created at: {notification.created_at}
+                      Created at:{" "}
+                      {new Date(notification.created_at).toLocaleDateString()}
                     </p>
                     <p className="p-1">ServiceId: {notification.serviceId}</p>
                     <p className="p-1">
