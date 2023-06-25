@@ -65,7 +65,7 @@ function NotificationBell() {
         )}
       </button>
       {showNotifications && notifications.length > 0 && (
-        <div className="absolute top-8 right-0 w-100 bg-gray-700 rounded-md shadow-lg py-2 px-3 mt-2 max-h-64 overflow-y-scroll scroll-smooth">
+        <div className="absolute top-8 right-0 w-64 bg-gray-700 rounded-md shadow-lg py-2 px-3 mt-2 max-h-96 overflow-y-scroll scroll-smooth">
           {notifications
             .slice()
             .reverse()
@@ -81,11 +81,11 @@ function NotificationBell() {
                 priority: number;
                 message: string;
               }) => (
-                <div key={notification.id} className="py-2 break-words">
+                <div key={notification.id} className="p-1 pt-2 break-words">
                   <span className="text-white">
                     {notification && notification.message && (
                       <p
-                        className="p-0 break-words w-full pl-4"
+                        className="p-0 break-words w-full pl-2"
                         dangerouslySetInnerHTML={{
                           __html: `Message: ${notification.message.replace(
                             /\n/g,

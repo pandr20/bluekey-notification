@@ -60,7 +60,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ clientId, serviceId }) => {
   };
 
   return (
-    <div>
+    <div className="bg-slate-800 sm:bg-primary-black">
       {/* Button to toggle user dropdown */}
       <button
         className="text-white"
@@ -74,7 +74,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ clientId, serviceId }) => {
           {/* Dropdown to select a user */}
           {/* Important: Extracts the userId of chosen user */}
           <select
-            className="bg-dimBlue rounded-full w-40"
+            className="bg-dimBlue rounded-full w-15 sm:w-40"
             onChange={(e) => setSelectedUserId(e.target.value)}
           >
             <option value="">Select a user</option>
